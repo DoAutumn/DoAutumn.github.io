@@ -369,6 +369,11 @@
 <h3 id="4-设置缩进为2个空格"><a href="#4-设置缩进为2个空格" class="headerlink" title="4.设置缩进为2个空格"></a>4.设置缩进为2个空格</h3><p>Preferences ——&gt; Settings</p>
 <p>——&gt; 找到 Tab Size，将值改为2</p>
 <p>——&gt; 找到 Detect Indentation，将前边的复选框的勾选取消（配置全局文件为2个空格，不勾选则以前文件不变）</p>
+<h3 id="5-关闭顶部固定区域"><a href="#5-关闭顶部固定区域" class="headerlink" title="5.关闭顶部固定区域"></a>5.关闭顶部固定区域</h3><p>vscode从某个版本开始，在滚动左侧目录树、编辑区代码时，会在顶部保留层级结构，其实不好用，需要将其关闭</p>
+<p>Preferences ——&gt; Settings ——&gt; 搜索<code>sticky</code> ——&gt; 将其所有复选框均取消即可</p>
+<h3 id="6-安装Extensions"><a href="#6-安装Extensions" class="headerlink" title="6.安装Extensions"></a>6.安装Extensions</h3><ul>
+<li>GitLens必装</li>
+</ul>
 ]]></content>
       <categories>
         <category>技术分享</category>
@@ -1000,6 +1005,32 @@
 ]]></content>
       <categories>
         <category>数据分析</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Mac-文件添加到Docker并自定义图标</title>
+    <url>/2024/05/10/Mac-%E6%96%87%E4%BB%B6%E6%B7%BB%E5%8A%A0%E5%88%B0Docker%E5%B9%B6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E6%A0%87/</url>
+    <content><![CDATA[<p>有些时候我们需要将文件、目录添加到Docker中实现快速访问，默认地，Mac支持将文件、目录添加到Docker的活动区，非活动区是不能添加的，那如何解决呢？<br><img src="https://foruda.gitee.com/images/1715328057599114375/03333550_358662.png" alt="图1" title="WX20240510-153018@2x.png"></p>
+<ul>
+<li>1.将文件、目录后缀名改为<code>.app</code>即可</li>
+<li>2.将文件、目录拖入Docker之后记得再改回去</li>
+</ul>
+<h3 id="自定义图标"><a href="#自定义图标" class="headerlink" title="自定义图标"></a>自定义图标</h3><ul>
+<li>3.右键文件、目录 -&gt; 显示简介</li>
+<li>4.复制一个图标之后，点击弹窗中的图标，直接粘贴即可<br><img src="https://foruda.gitee.com/images/1715328082943671728/433227a5_358662.png" alt="图2" title="WX20240510-153229@2x.png"></li>
+</ul>
+<h3 id="设置打开方式"><a href="#设置打开方式" class="headerlink" title="设置打开方式"></a>设置打开方式</h3><ul>
+<li>5.如果是特殊格式的文件，记得选择对应的打开方式<ul>
+<li>如<code>.sh</code>，选择<code>终端</code>即可点击就立即执行脚本</li>
+<li>另外在脚本的最后可以添加<code>exit 0</code>命令以结束进程</li>
+<li>还可以设置<code>当shell退出时</code>关闭窗口</li>
+<li><img src="https://foruda.gitee.com/images/1715328099400499407/d69b2c77_358662.png" alt="图3" title="WX20240510-153625@2x.png"></li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MacOS</category>
       </categories>
   </entry>
 </search>
