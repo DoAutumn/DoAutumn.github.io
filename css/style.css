@@ -152,8 +152,16 @@ div {
   margin-top: 10px;
 }
 #sidebar .widget .tagcloud a {
-  line-height: 1.5;
-  padding: 5px;
+  padding: 0 6px;
+  border: solid 1px #ddd;
+  border-radius: 5px;
+  margin-right: 3px;
+  margin-bottom: 6px;
+  display: inline-block;
+  height: 22px;
+  line-height: 21px;
+  box-sizing: border-box;
+  font-size: 12px !important;
 }
 #sidebar .widget ul {
   list-style: none;
@@ -330,6 +338,14 @@ div {
 .post .post-content pre code {
   padding: 0 2em;
 }
+.post .post-content h1 a, .post .post-content h2 a, .post .post-content h3 a, .post .post-content h4 a, .post .post-content h5 a, .post .post-content h6 a {
+  color: #01579f;
+  padding-bottom: 2px;
+  word-break: normal;
+}
+.post .post-content h1 a:hover, .post .post-content h2 a:hover, .post .post-content h3 a:hover, .post .post-content h4 a:hover, .post .post-content h5 a:hover, .post .post-content h6 a:hover {
+  text-decoration: underline;
+}
 .post .post-content p {
   margin: 0 0 1.234em;
   word-break: break-word;
@@ -338,10 +354,12 @@ div {
 .post .post-content p code {
   display: inline-block;
   margin: 0;
-  padding: 0 5px;
+  padding: 0 8px;
   background: #e4e4e4;
   font-family: Menlo, Consolas, monospace !important;
   line-height: 22px;
+  border-radius: 3px;
+  font-size: 15px;
 }
 .post .post-content p a {
   color: #01579f;
@@ -388,6 +406,8 @@ div {
   background: #e4e4e4;
   font-family: Menlo, Consolas, monospace !important;
   line-height: 22px;
+  border-radius: 3px;
+  font-size: 15px;
 }
 .post .post-content ul a,
 .post .post-content ol a {
@@ -508,6 +528,8 @@ div {
 }
 .post-archive .date {
   padding-right: 0.7em;
+  font-family: monospace;
+  color: #6E7173;
 }
 
 /* for archive page ends*/
@@ -1547,6 +1569,7 @@ figure.highlight .line,
   margin: 1.1em 0 0 2em;
   padding: 0.7em 0.7em 0 0.7em;
   max-width: 40%;
+  background-color: #fff;
 }
 
 .toc-title {

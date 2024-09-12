@@ -4,8 +4,8 @@
 
 .btn-copy {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 2px;
+  right: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,11 +22,8 @@
   -webkit-transition: opacity 0.3s ease-in-out;
   -o-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
+  background: #fff;
   opacity: 0;
-}
-
-.btn-copy:hover {
-  color: #000;
 }
 
 .highlight:hover .btn-copy {
