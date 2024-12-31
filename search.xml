@@ -109,24 +109,6 @@
       </tags>
   </entry>
   <entry>
-    <title>CentOS安装NodeJS详细教程</title>
-    <url>/2024/10/13/CentOS%E5%AE%89%E8%A3%85NodeJS%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h3 id="1-下载"><a href="#1-下载" class="headerlink" title="1. 下载"></a>1. 下载</h3><ul>
-<li>官网下载链接：<a href="http://nodejs.cn/download/">http://nodejs.cn/download/</a></li>
-<li>用wget命令下载<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v16.13.0/node-v16.13.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="2-解压缩"><a href="#2-解压缩" class="headerlink" title="2. 解压缩"></a>2. 解压缩</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -xvf node-v16.13.0-linux-x64.tar.xz</span><br><span class="line">mv node-v16.13.0-linux-x64 nodejs</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-创建软链接"><a href="#3-创建软链接" class="headerlink" title="3. 创建软链接"></a>3. 创建软链接</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ln -s /opt/nodejs/bin/npm /usr/local/bin/</span><br><span class="line">ln -s /opt/nodejs/bin/node /usr/local/bin/</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-验证"><a href="#4-验证" class="headerlink" title="4. 验证"></a>4. 验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-更换npm源"><a href="#5-更换npm源" class="headerlink" title="5. 更换npm源"></a>5. 更换npm源</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Gzip压缩</title>
     <url>/2022/08/10/Gzip%E5%8E%8B%E7%BC%A9/</url>
     <content><![CDATA[<p>开启Gzip压缩功能后，服务对资源进行Gzip压缩后返回，缩小传输文件大小，提升文件传输效率，减少带宽消耗。</p>
@@ -193,6 +175,46 @@
       </tags>
   </entry>
   <entry>
+    <title>CentOS安装NodeJS详细教程</title>
+    <url>/2024/10/13/CentOS%E5%AE%89%E8%A3%85NodeJS%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h3 id="1-下载"><a href="#1-下载" class="headerlink" title="1. 下载"></a>1. 下载</h3><ul>
+<li>官网下载链接：<a href="http://nodejs.cn/download/">http://nodejs.cn/download/</a></li>
+<li>用wget命令下载<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v16.13.0/node-v16.13.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-解压缩"><a href="#2-解压缩" class="headerlink" title="2. 解压缩"></a>2. 解压缩</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -xvf node-v16.13.0-linux-x64.tar.xz</span><br><span class="line">mv node-v16.13.0-linux-x64 nodejs</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-创建软链接"><a href="#3-创建软链接" class="headerlink" title="3. 创建软链接"></a>3. 创建软链接</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ln -s /opt/nodejs/bin/npm /usr/local/bin/</span><br><span class="line">ln -s /opt/nodejs/bin/node /usr/local/bin/</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证"><a href="#4-验证" class="headerlink" title="4. 验证"></a>4. 验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-更换npm源"><a href="#5-更换npm源" class="headerlink" title="5. 更换npm源"></a>5. 更换npm源</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Mac_手动安装openssl@3</title>
+    <url>/2024/10/25/Mac-%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85openssl@3/</url>
+    <content><![CDATA[<p>macOS Big Sur 通过 homebrew 安装 openssl 失败，被嫌弃系统太老。</p>
+<p>I manually installed openssl@3 with the following commands</p>
+<ol>
+<li>Download the latest version from <a href="https://www.openssl.org/source/openssl-3.1.1.tar.gz">https://www.openssl.org/source/openssl-3.1.1.tar.gz</a></li>
+<li>Uncompress the file with double click and open the terminal. Find the created folder and cd openssl-3.1.1</li>
+<li>Continue with<br><code>perl ./Configure --prefix=/usr/local --openssldir=/usr/local/openssl no-ssl3 no-ssl3-method no-zlib darwin64-x86_64-cc enable-ec_nistp_64_gcc_128</code></li>
+<li><code>make</code></li>
+<li><code>make test</code> (optional) I passed all tests</li>
+<li><code>sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.1.1_1/share/man MANSUFFIX=ssl</code></li>
+<li><code>openssl version</code> (optional - verification). It should report OpenSSL 3.1.1 30 May 2023 (Library: OpenSSL 3.1.1 30 May 2023)</li>
+<li><code>which -a openssl</code> (optional).</li>
+<li><code>brew link openssl@3</code></li>
+<li><code>brew list</code> (optional) you should see the openssl@3 inside installed packages.</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Mac</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Mac_Chrome跨域</title>
     <url>/2023/02/05/Mac_Chrome%E8%B7%A8%E5%9F%9F/</url>
     <content><![CDATA[<p>Mac以允许跨域方式启动Chrome，直接在终端执行以下命令即可：</p>
@@ -220,22 +242,20 @@
       </categories>
   </entry>
   <entry>
-    <title>Mac_手动安装openssl@3</title>
-    <url>/2024/10/25/Mac-%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85openssl@3/</url>
-    <content><![CDATA[<p>macOS Big Sur 通过 homebrew 安装 openssl 失败，被嫌弃系统太老。</p>
-<p>I manually installed openssl@3 with the following commands</p>
-<ol>
-<li>Download the latest version from <a href="https://www.openssl.org/source/openssl-3.1.1.tar.gz">https://www.openssl.org/source/openssl-3.1.1.tar.gz</a></li>
-<li>Uncompress the file with double click and open the terminal. Find the created folder and cd openssl-3.1.1</li>
-<li>Continue with<br><code>perl ./Configure --prefix=/usr/local --openssldir=/usr/local/openssl no-ssl3 no-ssl3-method no-zlib darwin64-x86_64-cc enable-ec_nistp_64_gcc_128</code></li>
-<li><code>make</code></li>
-<li><code>make test</code> (optional) I passed all tests</li>
-<li><code>sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.1.1_1/share/man MANSUFFIX=ssl</code></li>
-<li><code>openssl version</code> (optional - verification). It should report OpenSSL 3.1.1 30 May 2023 (Library: OpenSSL 3.1.1 30 May 2023)</li>
-<li><code>which -a openssl</code> (optional).</li>
-<li><code>brew link openssl@3</code></li>
-<li><code>brew list</code> (optional) you should see the openssl@3 inside installed packages.</li>
-</ol>
+    <title>Mac_彻底删除应用程序</title>
+    <url>/2023/01/11/Mac_%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</url>
+    <content><![CDATA[<p>不论是通过Finder还是Launchpad卸载应用程序之后，还需要清除应用程序残留的文件，如首选项、支持文件、缓存、隐藏文件等。这些残留文件，目前通过自己使用的情况来看，即使使用CleanMyMac X也无法清除。不过我们可以通过如下方式达到目的：<br>我们只需要在如下目录找到相关目录文件，将其删除即可。</p>
+<ul>
+<li>应用程序支持文件：<code>~/Library/Application Support/(App Name)</code></li>
+<li>首选项：<code>~/Library/Preferences/(App Name)</code></li>
+<li>资料包：<code>~/Library/Containers/(App Name)</code></li>
+<li>缓存：<code>~/Library/Caches/(App Name)</code></li>
+</ul>
+<p>如果某些应用在安装时，自动添加到了 <code>设置 &gt; 通用 &gt; 登录项 &gt; 允许在后台</code>，则还需执行如下步骤：</p>
+<ul>
+<li><code>cd /Library/LaunchDaemons/</code>，找到该应用相关的.plist文件，<code>rm -rf xxx</code>删除</li>
+<li><code>cd /Library/LaunchAgents/</code>，找到该应用相关的.plist文件，<code>rm -rf xxx</code>删除</li>
+</ul>
 ]]></content>
       <categories>
         <category>Mac</category>
@@ -267,26 +287,6 @@
 <li><code>cd tree-2.1.0</code></li>
 <li><code>make install</code></li>
 <li><code>tree --version</code></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Mac</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Mac_彻底删除应用程序</title>
-    <url>/2023/01/11/Mac_%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</url>
-    <content><![CDATA[<p>不论是通过Finder还是Launchpad卸载应用程序之后，还需要清除应用程序残留的文件，如首选项、支持文件、缓存、隐藏文件等。这些残留文件，目前通过自己使用的情况来看，即使使用CleanMyMac X也无法清除。不过我们可以通过如下方式达到目的：<br>我们只需要在如下目录找到相关目录文件，将其删除即可。</p>
-<ul>
-<li>应用程序支持文件：<code>~/Library/Application Support/(App Name)</code></li>
-<li>首选项：<code>~/Library/Preferences/(App Name)</code></li>
-<li>资料包：<code>~/Library/Containers/(App Name)</code></li>
-<li>缓存：<code>~/Library/Caches/(App Name)</code></li>
-</ul>
-<p>如果某些应用在安装时，自动添加到了 <code>设置 &gt; 通用 &gt; 登录项 &gt; 允许在后台</code>，则还需执行如下步骤：</p>
-<ul>
-<li><code>cd /Library/LaunchDaemons/</code>，找到该应用相关的.plist文件，<code>rm -rf xxx</code>删除</li>
-<li><code>cd /Library/LaunchAgents/</code>，找到该应用相关的.plist文件，<code>rm -rf xxx</code>删除</li>
 </ul>
 ]]></content>
       <categories>
@@ -403,6 +403,22 @@
         <tag>Puppeteer</tag>
         <tag>无头浏览器</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>http-server开启https服务</title>
+    <url>/2022/08/17/http-server%E5%BC%80%E5%90%AFhttps%E6%9C%8D%E5%8A%A1/</url>
+    <content><![CDATA[<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>直接使用 http-server 命令开启的是 http 服务，在 npmjs 的官网地址中只是看到了 http-server -S 是开启 https 服务的方法，但是我这边直接使用该命令会报如下所示的错误，具体原因是没有证书密钥对文件。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/http-server%E5%BC%80%E5%90%AFhttps%E6%9C%8D%E5%8A%A1/%E6%97%A0%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6%E9%94%99%E8%AF%AF.png" alt="无证书文件错误.png"></p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><ul>
+<li>1、下载安装openssl</li>
+<li>2、使用以下命令生成一个证书密钥对 key.pem 和 cert.pem，设置有效期约10年（准确地说是3650天）<br><code>openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem</code></li>
+<li>3、然后就可以起服务了<br><code>http-server -S</code></li>
+</ul>
+<hr>
+<p>下面这个记不清是在什么场景下使用的了<br>在html的头部加入meta使得所有的资源请求由http请求转成https请求<br><code>&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;upgrade-insecure-requests&quot;&gt;</code></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
   </entry>
   <entry>
     <title>Vue3入门</title>
@@ -529,22 +545,6 @@
       </categories>
   </entry>
   <entry>
-    <title>http-server开启https服务</title>
-    <url>/2022/08/17/http-server%E5%BC%80%E5%90%AFhttps%E6%9C%8D%E5%8A%A1/</url>
-    <content><![CDATA[<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>直接使用 http-server 命令开启的是 http 服务，在 npmjs 的官网地址中只是看到了 http-server -S 是开启 https 服务的方法，但是我这边直接使用该命令会报如下所示的错误，具体原因是没有证书密钥对文件。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/http-server%E5%BC%80%E5%90%AFhttps%E6%9C%8D%E5%8A%A1/%E6%97%A0%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6%E9%94%99%E8%AF%AF.png" alt="无证书文件错误.png"></p>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><ul>
-<li>1、下载安装openssl</li>
-<li>2、使用以下命令生成一个证书密钥对 key.pem 和 cert.pem，设置有效期约10年（准确地说是3650天）<br><code>openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem</code></li>
-<li>3、然后就可以起服务了<br><code>http-server -S</code></li>
-</ul>
-<hr>
-<p>下面这个记不清是在什么场景下使用的了<br>在html的头部加入meta使得所有的资源请求由http请求转成https请求<br><code>&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;upgrade-insecure-requests&quot;&gt;</code></p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Linux无外网全局安装node依赖包</title>
     <url>/2023/03/27/linux%E6%97%A0%E5%A4%96%E7%BD%91%E5%85%A8%E5%B1%80%E5%AE%89%E8%A3%85node%E4%BE%9D%E8%B5%96%E5%8C%85/</url>
     <content><![CDATA[<ul>
@@ -555,21 +555,6 @@
 ]]></content>
       <categories>
         <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>markdown文件转word文件</title>
-    <url>/2023/01/11/markdown%E6%96%87%E4%BB%B6%E8%BD%ACword%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
-<li>1、安装nodejs</li>
-<li>2、安装marked，<code>npm i marked</code></li>
-<li>3、转换成doc格式前，需要把md文件转换为html标签格式，才能保留doc文件中的样式，新建立<code>head.html</code>模板文件，内容如下：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Markdoc Preview<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"><span class="selector-tag">html</span> &#123;<span class="attribute">font-family</span>: sans-serif; -ms-text-size-adjust: <span class="number">100%</span>; -webkit-text-size-adjust: <span class="number">100%</span>; &#125;<span class="selector-tag">body</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">article</span>,<span class="selector-tag">aside</span>,<span class="selector-tag">details</span>,<span class="selector-tag">figcaption</span>,<span class="selector-tag">figure</span>,<span class="selector-tag">footer</span>,<span class="selector-tag">header</span>,<span class="selector-tag">hgroup</span>,<span class="selector-tag">main</span>,<span class="selector-tag">nav</span>,<span class="selector-tag">section</span>,<span class="selector-tag">summary</span> &#123;<span class="attribute">display</span>: block;&#125;<span class="selector-tag">audio</span>,<span class="selector-tag">canvas</span>,progress,<span class="selector-tag">video</span> &#123;<span class="attribute">display</span>: inline-block; <span class="attribute">vertical-align</span>: baseline; &#125;<span class="selector-tag">audio</span><span class="selector-pseudo">:not</span>(<span class="selector-attr">[controls]</span>) &#123;<span class="attribute">display</span>: none;<span class="attribute">height</span>: <span class="number">0</span>;&#125;<span class="selector-attr">[hidden]</span>,template &#123;<span class="attribute">display</span>: none;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">background</span>: transparent;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:active</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;<span class="attribute">outline</span>: <span class="number">0</span>;&#125;<span class="selector-tag">abbr</span><span class="selector-attr">[title]</span> &#123;<span class="attribute">border-bottom</span>: <span class="number">1px</span> dotted;&#125;<span class="selector-tag">b</span>,<span class="selector-tag">strong</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">dfn</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-tag">h1</span> &#123;<span class="attribute">font-size</span>: <span class="number">2em</span>;<span class="attribute">margin</span>: <span class="number">0.67em</span> <span class="number">0</span>;&#125;<span class="selector-tag">mark</span> &#123;<span class="attribute">background</span>: <span class="number">#ff0</span>;<span class="attribute">color</span>: <span class="number">#000</span>;&#125;small &#123;<span class="attribute">font-size</span>: <span class="number">80%</span>;&#125;sub,<span class="selector-tag">sup</span> &#123;<span class="attribute">font-size</span>: <span class="number">75%</span>;<span class="attribute">line-height</span>: <span class="number">0</span>;<span class="attribute">position</span>: relative;<span class="attribute">vertical-align</span>: baseline;&#125;<span class="selector-tag">sup</span> &#123;<span class="attribute">top</span>: -<span class="number">0.5em</span>;&#125;sub &#123;<span class="attribute">bottom</span>: -<span class="number">0.25em</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>;&#125;svg<span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:root</span>) &#123;<span class="attribute">overflow</span>: hidden;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">1em</span> <span class="number">40px</span>;&#125;hr &#123;-moz-<span class="attribute">box-sizing</span>: content-box;<span class="attribute">box-sizing</span>: content-box;<span class="attribute">height</span>: <span class="number">0</span>;&#125;pre &#123;<span class="attribute">overflow</span>: auto;&#125;<span class="selector-tag">code</span>,<span class="selector-tag">kbd</span>,pre,<span class="selector-tag">samp</span> &#123;<span class="attribute">font-family</span>: monospace, monospace;<span class="attribute">font-size</span>: <span class="number">1em</span>;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">input</span>,optgroup,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">color</span>: inherit; <span class="attribute">font</span>: inherit; <span class="attribute">margin</span>: <span class="number">0</span>; &#125;<span class="selector-tag">button</span> &#123;<span class="attribute">overflow</span>: visible;&#125;<span class="selector-tag">button</span>,select &#123;<span class="attribute">text-transform</span>: none;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;button&quot;</span>]</span>, <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;reset&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;-webkit-appearance: button; <span class="attribute">cursor</span>: pointer; &#125;<span class="selector-tag">button</span><span class="selector-attr">[disabled]</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[disabled]</span> &#123;<span class="attribute">cursor</span>: default;&#125;<span class="selector-tag">button</span>::-moz-focus-inner,input::-moz-focus-inner &#123;<span class="attribute">border</span>: <span class="number">0</span>;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;<span class="selector-tag">input</span> &#123;<span class="attribute">line-height</span>: normal;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;checkbox&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;radio&quot;</span>]</span> &#123;<span class="attribute">box-sizing</span>: border-box; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;number&quot;</span>]</span>::-webkit-inner-spin-button,input[type=<span class="string">&quot;number&quot;</span>]::-webkit-outer-spin-button &#123;<span class="attribute">height</span>: auto;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span> &#123;-webkit-appearance: textfield; -moz-<span class="attribute">box-sizing</span>: content-box;-webkit-<span class="attribute">box-sizing</span>: content-box; <span class="attribute">box-sizing</span>: content-box;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span>::-webkit-search-cancel-button,input[type=<span class="string">&quot;search&quot;</span>]::-webkit-search-decoration &#123;-webkit-appearance: none;&#125;<span class="selector-tag">fieldset</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#c0c0c0</span>;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;<span class="attribute">padding</span>: <span class="number">0.35em</span> <span class="number">0.625em</span> <span class="number">0.75em</span>;&#125;<span class="selector-tag">legend</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">textarea</span> &#123;<span class="attribute">overflow</span>: auto;&#125;optgroup &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">table</span> &#123;<span class="attribute">border-collapse</span>: collapse;<span class="attribute">border-spacing</span>: <span class="number">0</span>;&#125;<span class="selector-tag">td</span>,<span class="selector-tag">th</span> &#123;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;* &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;*<span class="selector-pseudo">:before</span>,*<span class="selector-pseudo">:after</span> &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;<span class="selector-tag">html</span> &#123;<span class="attribute">font-size</span>: <span class="number">62.5%</span>;-webkit-tap-highlight-<span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);&#125;<span class="selector-tag">body</span> &#123;<span class="attribute">font-family</span>: <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, Arial, <span class="string">&#x27;Microsoft Yahei&#x27;</span>, sans-serif;<span class="attribute">font-size</span>: <span class="number">14px</span>;<span class="attribute">line-height</span>: <span class="number">1.42857143</span>;<span class="attribute">color</span>: <span class="number">#333333</span>;<span class="attribute">background-color</span>: <span class="number">#ffffff</span>;&#125;<span class="selector-tag">input</span>,<span class="selector-tag">button</span>,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">font-family</span>: inherit;<span class="attribute">font-size</span>: inherit;<span class="attribute">line-height</span>: inherit;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">color</span>: <span class="number">#428bca</span>;<span class="attribute">text-decoration</span>: none;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">color</span>: <span class="number">#2a6496</span>;<span class="attribute">text-decoration</span>: underline;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">outline</span>: thin dotted;<span class="attribute">outline</span>: <span class="number">5px</span> auto -webkit-focus-ring-color;<span class="attribute">outline-offset</span>: -<span class="number">2px</span>;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">vertical-align</span>: middle;&#125;<span class="selector-class">.hljs</span> &#123;<span class="attribute">display</span>: block;<span class="attribute">overflow-x</span>: auto;<span class="attribute">padding</span>: <span class="number">0.5em</span>;<span class="attribute">background</span>: <span class="number">#f0f0f0</span>;-webkit-text-size-adjust: none;&#125;<span class="selector-class">.hljs</span>,<span class="selector-class">.hljs-subst</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-title</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-title</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-parent</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-rules</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-preprocessor</span>,<span class="selector-class">.hljs-pragma</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-template_tag</span>,<span class="selector-class">.django</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-addition</span>,<span class="selector-class">.hljs-flow</span>,<span class="selector-class">.hljs-stream</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-cbracket</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-special</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-function_or_atom</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-attribute</span> &#123;<span class="attribute">color</span>: <span class="number">#800</span>;&#125;<span class="selector-class">.smartquote</span>,<span class="selector-class">.hljs-comment</span>,<span class="selector-class">.hljs-annotation</span>,<span class="selector-class">.diff</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.hljs-chunk</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-blockquote</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-blockquote</span> &#123;<span class="attribute">color</span>: <span class="number">#888</span>;&#125;<span class="selector-class">.hljs-number</span>,<span class="selector-class">.hljs-date</span>,<span class="selector-class">.hljs-regexp</span>,<span class="selector-class">.hljs-literal</span>,<span class="selector-class">.hljs-hexcolor</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-char</span>,<span class="selector-class">.go</span> <span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-change</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.makefile</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_url</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_url</span> &#123;<span class="attribute">color</span>: <span class="number">#080</span>;&#125;<span class="selector-class">.hljs-label</span>,<span class="selector-class">.hljs-javadoc</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-decorator</span>,<span class="selector-class">.hljs-filter</span> <span class="selector-class">.hljs-argument</span>,<span class="selector-class">.hljs-localvars</span>,<span class="selector-class">.hljs-array</span>,<span class="selector-class">.hljs-attr_selector</span>,<span class="selector-class">.hljs-important</span>,<span class="selector-class">.hljs-pseudo</span>,<span class="selector-class">.hljs-pi</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.hljs-doctype</span>,<span class="selector-class">.hljs-deletion</span>,<span class="selector-class">.hljs-envvar</span>,<span class="selector-class">.hljs-shebang</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-sqbracket</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-reserved</span>,<span class="selector-class">.hljs-prompt</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.vhdl</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.clojure</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-property</span>,<span class="selector-class">.hljs-phony</span> &#123;<span class="attribute">color</span>: <span class="number">#88f</span>;&#125;<span class="selector-class">.hljs-keyword</span>,<span class="selector-class">.hljs-id</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.css</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-javadoctag</span>,<span class="selector-class">.hljs-phpdoc</span>,<span class="selector-class">.hljs-dartdoc</span>,<span class="selector-class">.hljs-yardoctag</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-winutils</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-type</span>,<span class="selector-class">.hljs-typename</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.hljs-request</span>,<span class="selector-class">.hljs-status</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-emphasis</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-emphasis</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span> &#123;<span class="attribute">font-weight</span>: normal;&#125;<span class="selector-class">.coffeescript</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.javascript</span> <span class="selector-class">.xml</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.markup</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.xml</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.vbscript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.css</span>,<span class="selector-class">.xml</span> <span class="selector-class">.hljs-cdata</span> &#123;<span class="attribute">opacity</span>: <span class="number">0.5</span>;&#125;<span class="selector-id">#container</span> &#123;<span class="attribute">padding</span>: <span class="number">15px</span>;<span class="attribute">margin-left</span>:<span class="number">20px</span>;&#125;pre &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">border-radius</span>: <span class="number">4px</span>;<span class="attribute">display</span>: block;&#125;pre <span class="selector-tag">code</span> &#123;<span class="attribute">white-space</span>: pre-wrap;&#125;<span class="selector-class">.hljs</span>,<span class="selector-tag">code</span> &#123;<span class="attribute">font-family</span>: Monaco, Menlo, Consolas, <span class="string">&#x27;Courier New&#x27;</span>, monospace;&#125;pre&#123;<span class="attribute">background-color</span>: <span class="number">#dddddd</span>;<span class="attribute">padding</span>:<span class="number">8px</span> <span class="number">0px</span> <span class="number">8px</span> <span class="number">30px</span>;<span class="attribute">word-wrap</span>: break-word;&#125;<span class="selector-tag">table</span> <span class="selector-tag">tbody</span> <span class="selector-tag">tr</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>n) &#123;<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">158</span>,<span class="number">188</span>,<span class="number">226</span>,<span class="number">0.12</span>); &#125;<span class="selector-pseudo">:not</span>(pre) &gt; <span class="selector-tag">code</span> &#123;<span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">4px</span>;<span class="attribute">font-size</span>: <span class="number">90%</span>;<span class="attribute">color</span>: <span class="number">#c7254e</span>;<span class="attribute">background-color</span>: <span class="number">#f9f2f4</span>;<span class="attribute">white-space</span>: nowrap;<span class="attribute">border-radius</span>: <span class="number">4px</span>;&#125;<span class="selector-tag">th</span>, <span class="selector-tag">td</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">12px</span>;&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">border-left-width</span>: <span class="number">10px</span>;<span class="attribute">background-color</span>: <span class="built_in">rgba</span>(<span class="number">102</span>,<span class="number">128</span>,<span class="number">153</span>,<span class="number">0.05</span>);<span class="attribute">border-top-right-radius</span>: <span class="number">5px</span>;<span class="attribute">border-bottom-right-radius</span>: <span class="number">5px</span>;<span class="attribute">padding</span>: <span class="number">1px</span> <span class="number">20px</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:before</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:after</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;\00A0 \2014&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&quot;&quot;</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">1.1em</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">p</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">1.1em</span>;<span class="attribute">font-size</span>: <span class="number">1em</span>;<span class="attribute">line-height</span>: <span class="number">1.45</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">ul</span><span class="selector-pseudo">:last-child</span>,<span class="selector-tag">blockquote</span> <span class="selector-tag">ol</span><span class="selector-pseudo">:last-child</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">0</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">21px</span>;<span class="attribute">border-left</span>: <span class="number">10px</span> solid <span class="number">#dddddd</span>;&#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span> <span class="attr">marginwidth</span>=<span class="string">&quot;0&quot;</span> <span class="attr">marginheight</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">      replace_area</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>4、新建js脚本文件<code>convert.js</code>内容如下：<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> &#123; marked &#125; = <span class="built_in">require</span>(<span class="string">&#x27;marked&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取第3步创建的模板html文件</span></span><br><span class="line"><span class="keyword">var</span> headFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;head.html&#x27;</span>);</span><br><span class="line"><span class="comment">// 读取将要被转换的md文件</span></span><br><span class="line"><span class="keyword">var</span> mdFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;mark.md&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;----正在转换...&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用marked将md文件转换成html</span></span><br><span class="line"><span class="keyword">var</span> mdToHtmlStr = <span class="title function_">marked</span>(mdFile.<span class="title function_">toString</span>());</span><br><span class="line"><span class="comment">// 将md转换成html字符串替换到html模板文件中replace_area的位置</span></span><br><span class="line"><span class="keyword">var</span> content = headFile.<span class="title function_">toString</span>().<span class="title function_">replace</span>(<span class="string">&#x27;replace_area&#x27;</span>, mdToHtmlStr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&quot;准备写入文件&quot;);</span></span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">writeFile</span>(<span class="string">&#x27;output.doc&#x27;</span>, content, <span class="keyword">function</span>(<span class="params">err</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;数据写入成功！&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// console.log(content);</span></span><br></pre></td></tr></table></figure></li>
-<li>5、运行脚本<code>node convert.js</code>即可</li>
-</ul>
-]]></content>
-      <categories>
-        <category>其他</category>
       </categories>
   </entry>
   <entry>
@@ -599,6 +584,21 @@
       <tags>
         <tag>vscode</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>markdown文件转word文件</title>
+    <url>/2023/01/11/markdown%E6%96%87%E4%BB%B6%E8%BD%ACword%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>1、安装nodejs</li>
+<li>2、安装marked，<code>npm i marked</code></li>
+<li>3、转换成doc格式前，需要把md文件转换为html标签格式，才能保留doc文件中的样式，新建立<code>head.html</code>模板文件，内容如下：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Markdoc Preview<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"><span class="selector-tag">html</span> &#123;<span class="attribute">font-family</span>: sans-serif; -ms-text-size-adjust: <span class="number">100%</span>; -webkit-text-size-adjust: <span class="number">100%</span>; &#125;<span class="selector-tag">body</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">article</span>,<span class="selector-tag">aside</span>,<span class="selector-tag">details</span>,<span class="selector-tag">figcaption</span>,<span class="selector-tag">figure</span>,<span class="selector-tag">footer</span>,<span class="selector-tag">header</span>,<span class="selector-tag">hgroup</span>,<span class="selector-tag">main</span>,<span class="selector-tag">nav</span>,<span class="selector-tag">section</span>,<span class="selector-tag">summary</span> &#123;<span class="attribute">display</span>: block;&#125;<span class="selector-tag">audio</span>,<span class="selector-tag">canvas</span>,progress,<span class="selector-tag">video</span> &#123;<span class="attribute">display</span>: inline-block; <span class="attribute">vertical-align</span>: baseline; &#125;<span class="selector-tag">audio</span><span class="selector-pseudo">:not</span>(<span class="selector-attr">[controls]</span>) &#123;<span class="attribute">display</span>: none;<span class="attribute">height</span>: <span class="number">0</span>;&#125;<span class="selector-attr">[hidden]</span>,template &#123;<span class="attribute">display</span>: none;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">background</span>: transparent;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:active</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;<span class="attribute">outline</span>: <span class="number">0</span>;&#125;<span class="selector-tag">abbr</span><span class="selector-attr">[title]</span> &#123;<span class="attribute">border-bottom</span>: <span class="number">1px</span> dotted;&#125;<span class="selector-tag">b</span>,<span class="selector-tag">strong</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">dfn</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-tag">h1</span> &#123;<span class="attribute">font-size</span>: <span class="number">2em</span>;<span class="attribute">margin</span>: <span class="number">0.67em</span> <span class="number">0</span>;&#125;<span class="selector-tag">mark</span> &#123;<span class="attribute">background</span>: <span class="number">#ff0</span>;<span class="attribute">color</span>: <span class="number">#000</span>;&#125;small &#123;<span class="attribute">font-size</span>: <span class="number">80%</span>;&#125;sub,<span class="selector-tag">sup</span> &#123;<span class="attribute">font-size</span>: <span class="number">75%</span>;<span class="attribute">line-height</span>: <span class="number">0</span>;<span class="attribute">position</span>: relative;<span class="attribute">vertical-align</span>: baseline;&#125;<span class="selector-tag">sup</span> &#123;<span class="attribute">top</span>: -<span class="number">0.5em</span>;&#125;sub &#123;<span class="attribute">bottom</span>: -<span class="number">0.25em</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>;&#125;svg<span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:root</span>) &#123;<span class="attribute">overflow</span>: hidden;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">1em</span> <span class="number">40px</span>;&#125;hr &#123;-moz-<span class="attribute">box-sizing</span>: content-box;<span class="attribute">box-sizing</span>: content-box;<span class="attribute">height</span>: <span class="number">0</span>;&#125;pre &#123;<span class="attribute">overflow</span>: auto;&#125;<span class="selector-tag">code</span>,<span class="selector-tag">kbd</span>,pre,<span class="selector-tag">samp</span> &#123;<span class="attribute">font-family</span>: monospace, monospace;<span class="attribute">font-size</span>: <span class="number">1em</span>;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">input</span>,optgroup,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">color</span>: inherit; <span class="attribute">font</span>: inherit; <span class="attribute">margin</span>: <span class="number">0</span>; &#125;<span class="selector-tag">button</span> &#123;<span class="attribute">overflow</span>: visible;&#125;<span class="selector-tag">button</span>,select &#123;<span class="attribute">text-transform</span>: none;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;button&quot;</span>]</span>, <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;reset&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;-webkit-appearance: button; <span class="attribute">cursor</span>: pointer; &#125;<span class="selector-tag">button</span><span class="selector-attr">[disabled]</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[disabled]</span> &#123;<span class="attribute">cursor</span>: default;&#125;<span class="selector-tag">button</span>::-moz-focus-inner,input::-moz-focus-inner &#123;<span class="attribute">border</span>: <span class="number">0</span>;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;<span class="selector-tag">input</span> &#123;<span class="attribute">line-height</span>: normal;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;checkbox&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;radio&quot;</span>]</span> &#123;<span class="attribute">box-sizing</span>: border-box; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;number&quot;</span>]</span>::-webkit-inner-spin-button,input[type=<span class="string">&quot;number&quot;</span>]::-webkit-outer-spin-button &#123;<span class="attribute">height</span>: auto;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span> &#123;-webkit-appearance: textfield; -moz-<span class="attribute">box-sizing</span>: content-box;-webkit-<span class="attribute">box-sizing</span>: content-box; <span class="attribute">box-sizing</span>: content-box;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span>::-webkit-search-cancel-button,input[type=<span class="string">&quot;search&quot;</span>]::-webkit-search-decoration &#123;-webkit-appearance: none;&#125;<span class="selector-tag">fieldset</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#c0c0c0</span>;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;<span class="attribute">padding</span>: <span class="number">0.35em</span> <span class="number">0.625em</span> <span class="number">0.75em</span>;&#125;<span class="selector-tag">legend</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">textarea</span> &#123;<span class="attribute">overflow</span>: auto;&#125;optgroup &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">table</span> &#123;<span class="attribute">border-collapse</span>: collapse;<span class="attribute">border-spacing</span>: <span class="number">0</span>;&#125;<span class="selector-tag">td</span>,<span class="selector-tag">th</span> &#123;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;* &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;*<span class="selector-pseudo">:before</span>,*<span class="selector-pseudo">:after</span> &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;<span class="selector-tag">html</span> &#123;<span class="attribute">font-size</span>: <span class="number">62.5%</span>;-webkit-tap-highlight-<span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);&#125;<span class="selector-tag">body</span> &#123;<span class="attribute">font-family</span>: <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, Arial, <span class="string">&#x27;Microsoft Yahei&#x27;</span>, sans-serif;<span class="attribute">font-size</span>: <span class="number">14px</span>;<span class="attribute">line-height</span>: <span class="number">1.42857143</span>;<span class="attribute">color</span>: <span class="number">#333333</span>;<span class="attribute">background-color</span>: <span class="number">#ffffff</span>;&#125;<span class="selector-tag">input</span>,<span class="selector-tag">button</span>,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">font-family</span>: inherit;<span class="attribute">font-size</span>: inherit;<span class="attribute">line-height</span>: inherit;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">color</span>: <span class="number">#428bca</span>;<span class="attribute">text-decoration</span>: none;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">color</span>: <span class="number">#2a6496</span>;<span class="attribute">text-decoration</span>: underline;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">outline</span>: thin dotted;<span class="attribute">outline</span>: <span class="number">5px</span> auto -webkit-focus-ring-color;<span class="attribute">outline-offset</span>: -<span class="number">2px</span>;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">vertical-align</span>: middle;&#125;<span class="selector-class">.hljs</span> &#123;<span class="attribute">display</span>: block;<span class="attribute">overflow-x</span>: auto;<span class="attribute">padding</span>: <span class="number">0.5em</span>;<span class="attribute">background</span>: <span class="number">#f0f0f0</span>;-webkit-text-size-adjust: none;&#125;<span class="selector-class">.hljs</span>,<span class="selector-class">.hljs-subst</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-title</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-title</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-parent</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-rules</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-preprocessor</span>,<span class="selector-class">.hljs-pragma</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-template_tag</span>,<span class="selector-class">.django</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-addition</span>,<span class="selector-class">.hljs-flow</span>,<span class="selector-class">.hljs-stream</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-cbracket</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-special</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-function_or_atom</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-attribute</span> &#123;<span class="attribute">color</span>: <span class="number">#800</span>;&#125;<span class="selector-class">.smartquote</span>,<span class="selector-class">.hljs-comment</span>,<span class="selector-class">.hljs-annotation</span>,<span class="selector-class">.diff</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.hljs-chunk</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-blockquote</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-blockquote</span> &#123;<span class="attribute">color</span>: <span class="number">#888</span>;&#125;<span class="selector-class">.hljs-number</span>,<span class="selector-class">.hljs-date</span>,<span class="selector-class">.hljs-regexp</span>,<span class="selector-class">.hljs-literal</span>,<span class="selector-class">.hljs-hexcolor</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-char</span>,<span class="selector-class">.go</span> <span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-change</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.makefile</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_url</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_url</span> &#123;<span class="attribute">color</span>: <span class="number">#080</span>;&#125;<span class="selector-class">.hljs-label</span>,<span class="selector-class">.hljs-javadoc</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-decorator</span>,<span class="selector-class">.hljs-filter</span> <span class="selector-class">.hljs-argument</span>,<span class="selector-class">.hljs-localvars</span>,<span class="selector-class">.hljs-array</span>,<span class="selector-class">.hljs-attr_selector</span>,<span class="selector-class">.hljs-important</span>,<span class="selector-class">.hljs-pseudo</span>,<span class="selector-class">.hljs-pi</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.hljs-doctype</span>,<span class="selector-class">.hljs-deletion</span>,<span class="selector-class">.hljs-envvar</span>,<span class="selector-class">.hljs-shebang</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-sqbracket</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-reserved</span>,<span class="selector-class">.hljs-prompt</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.vhdl</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.clojure</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-property</span>,<span class="selector-class">.hljs-phony</span> &#123;<span class="attribute">color</span>: <span class="number">#88f</span>;&#125;<span class="selector-class">.hljs-keyword</span>,<span class="selector-class">.hljs-id</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.css</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-javadoctag</span>,<span class="selector-class">.hljs-phpdoc</span>,<span class="selector-class">.hljs-dartdoc</span>,<span class="selector-class">.hljs-yardoctag</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-winutils</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-type</span>,<span class="selector-class">.hljs-typename</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.hljs-request</span>,<span class="selector-class">.hljs-status</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-emphasis</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-emphasis</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span> &#123;<span class="attribute">font-weight</span>: normal;&#125;<span class="selector-class">.coffeescript</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.javascript</span> <span class="selector-class">.xml</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.markup</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.xml</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.vbscript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.css</span>,<span class="selector-class">.xml</span> <span class="selector-class">.hljs-cdata</span> &#123;<span class="attribute">opacity</span>: <span class="number">0.5</span>;&#125;<span class="selector-id">#container</span> &#123;<span class="attribute">padding</span>: <span class="number">15px</span>;<span class="attribute">margin-left</span>:<span class="number">20px</span>;&#125;pre &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">border-radius</span>: <span class="number">4px</span>;<span class="attribute">display</span>: block;&#125;pre <span class="selector-tag">code</span> &#123;<span class="attribute">white-space</span>: pre-wrap;&#125;<span class="selector-class">.hljs</span>,<span class="selector-tag">code</span> &#123;<span class="attribute">font-family</span>: Monaco, Menlo, Consolas, <span class="string">&#x27;Courier New&#x27;</span>, monospace;&#125;pre&#123;<span class="attribute">background-color</span>: <span class="number">#dddddd</span>;<span class="attribute">padding</span>:<span class="number">8px</span> <span class="number">0px</span> <span class="number">8px</span> <span class="number">30px</span>;<span class="attribute">word-wrap</span>: break-word;&#125;<span class="selector-tag">table</span> <span class="selector-tag">tbody</span> <span class="selector-tag">tr</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>n) &#123;<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">158</span>,<span class="number">188</span>,<span class="number">226</span>,<span class="number">0.12</span>); &#125;<span class="selector-pseudo">:not</span>(pre) &gt; <span class="selector-tag">code</span> &#123;<span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">4px</span>;<span class="attribute">font-size</span>: <span class="number">90%</span>;<span class="attribute">color</span>: <span class="number">#c7254e</span>;<span class="attribute">background-color</span>: <span class="number">#f9f2f4</span>;<span class="attribute">white-space</span>: nowrap;<span class="attribute">border-radius</span>: <span class="number">4px</span>;&#125;<span class="selector-tag">th</span>, <span class="selector-tag">td</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">12px</span>;&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">border-left-width</span>: <span class="number">10px</span>;<span class="attribute">background-color</span>: <span class="built_in">rgba</span>(<span class="number">102</span>,<span class="number">128</span>,<span class="number">153</span>,<span class="number">0.05</span>);<span class="attribute">border-top-right-radius</span>: <span class="number">5px</span>;<span class="attribute">border-bottom-right-radius</span>: <span class="number">5px</span>;<span class="attribute">padding</span>: <span class="number">1px</span> <span class="number">20px</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:before</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:after</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;\00A0 \2014&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&quot;&quot;</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">1.1em</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">p</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">1.1em</span>;<span class="attribute">font-size</span>: <span class="number">1em</span>;<span class="attribute">line-height</span>: <span class="number">1.45</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">ul</span><span class="selector-pseudo">:last-child</span>,<span class="selector-tag">blockquote</span> <span class="selector-tag">ol</span><span class="selector-pseudo">:last-child</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">0</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">21px</span>;<span class="attribute">border-left</span>: <span class="number">10px</span> solid <span class="number">#dddddd</span>;&#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span> <span class="attr">marginwidth</span>=<span class="string">&quot;0&quot;</span> <span class="attr">marginheight</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">      replace_area</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>4、新建js脚本文件<code>convert.js</code>内容如下：<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> &#123; marked &#125; = <span class="built_in">require</span>(<span class="string">&#x27;marked&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取第3步创建的模板html文件</span></span><br><span class="line"><span class="keyword">var</span> headFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;head.html&#x27;</span>);</span><br><span class="line"><span class="comment">// 读取将要被转换的md文件</span></span><br><span class="line"><span class="keyword">var</span> mdFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;mark.md&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;----正在转换...&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用marked将md文件转换成html</span></span><br><span class="line"><span class="keyword">var</span> mdToHtmlStr = <span class="title function_">marked</span>(mdFile.<span class="title function_">toString</span>());</span><br><span class="line"><span class="comment">// 将md转换成html字符串替换到html模板文件中replace_area的位置</span></span><br><span class="line"><span class="keyword">var</span> content = headFile.<span class="title function_">toString</span>().<span class="title function_">replace</span>(<span class="string">&#x27;replace_area&#x27;</span>, mdToHtmlStr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&quot;准备写入文件&quot;);</span></span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">writeFile</span>(<span class="string">&#x27;output.doc&#x27;</span>, content, <span class="keyword">function</span>(<span class="params">err</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;数据写入成功！&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// console.log(content);</span></span><br></pre></td></tr></table></figure></li>
+<li>5、运行脚本<code>node convert.js</code>即可</li>
+</ul>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
   </entry>
   <entry>
     <title>wangEditor学习与使用</title>
@@ -762,6 +762,34 @@
       </tags>
   </entry>
   <entry>
+    <title>个人博客新评论邮件提醒功能</title>
+    <url>/2024/12/31/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%96%B0%E8%AF%84%E8%AE%BA%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E5%8A%9F%E8%83%BD/</url>
+    <content><![CDATA[<p>昨天无意间在打开科学上网的情况下访问了我的博客，发现有一条评论，都已经是11&#x2F;08的了，当初搭建博客的时候，虽然配置了使用 <a href="https://valine.js.org/">Valine</a> 评论系统，但是没有配置评论提醒功能，而且昨天刚发现，在没有开启科学上网的情况下，也加载不到评论，今天就来解决下这两个问题。</p>
+<h2 id="加载不到评论的问题"><a href="#加载不到评论的问题" class="headerlink" title="加载不到评论的问题"></a>加载不到评论的问题</h2><p>通过浏览器的 Network 可以看到，在没有科学上网的情况下，有一个 <code>av-min.js</code> 文件加载失败，怀疑是它导致的。</p>
+<p>通过排查，发现这个文件是由 <code>Valine.min.js</code> 文件加载的，而 <code>Valine.min.js</code> 在博客所使用的主题 <code>maupassant</code> 中是能够找到的：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// maupassant/layout/_partial/comments.pug</span></span><br><span class="line"><span class="title function_">script</span>(src=<span class="string">&#x27;//unpkg.com/valine@latest/dist/Valine.min.js&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>那我们只需要把这两个文件改成本地的就可以了。</p>
+<p>将两个文件保存到 <code>maupassant/source/js/</code> 目录下，然后修改 <code>comments.pug</code> 文件</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="title function_">script</span>(type=<span class="string">&#x27;text/javascript&#x27;</span>, src=<span class="title function_">url_for</span>(theme.<span class="property">js</span>) + <span class="string">&#x27;/Valine.min.js&#x27;</span> + <span class="string">&#x27;?v=&#x27;</span> + theme.<span class="property">version</span>)</span><br></pre></td></tr></table></figure>
+<p>同时修改 <code>Valine.min.js</code> 中对于 <code>av-min.js</code> 的引用地址 <code>/js/av-min.js</code> 即可。</p>
+<h2 id="邮件提醒"><a href="#邮件提醒" class="headerlink" title="邮件提醒"></a>邮件提醒</h2><p>Valine 自带的邮件提醒功能在 <code>v1.4.0</code> 中已经被移除了，具体可查看<a href="https://valine.js.org/notify.html">这里</a>，不过可以通过 <a href="https://github.com/zhaojun1998/Valine-Admin">Valine Admin</a> 来实现评论提醒功能。</p>
+<p>可以看到上面这个 Valine Admin 是 Fork 自 <a href="https://github.com/DesertsP/Valine-Admin">DesertsP 的 Valine Aadmin</a> 的，两个仓里都有配置步骤，但都有点问题，这里记录下。</p>
+<h3 id="1-代码库地址"><a href="#1-代码库地址" class="headerlink" title="1. 代码库地址"></a>1. 代码库地址</h3><p>Git 部署时，需要使用 <code>DesertsP</code> 的代码库，因为 <code>zhaojun1998</code> 的代码库在部署时会报错。<br><img width="500" alt="部署报错.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/部署报错.png"></p>
+<h3 id="2-环境变量"><a href="#2-环境变量" class="headerlink" title="2. 环境变量"></a>2. 环境变量</h3><p>在配置环境变量时，<code>DesertsP</code> 里面列的更全，我自己的是这样的：<br><img width="500" alt="环境变量.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/环境变量.png"><br>其中：</p>
+<ul>
+<li><code>SMTP_PASS</code>：网易邮箱的授权码，默认有效期是 180 天。</li>
+<li><code>ADMIN_URL</code>：是在 <code>环境变量</code> 下方 <code>绑定新域名</code> 处设置的，<code>DesertsP</code> 和 <code>zhaojun1998</code> 的截图，跟现在最新的 <code>LeanCloud</code> 的控制台页面已经对不上了。<img width="500" alt="访问域名.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/访问域名.png"></li>
+</ul>
+<h3 id="3-定时任务"><a href="#3-定时任务" class="headerlink" title="3. 定时任务"></a>3. 定时任务</h3><img width="500" alt="定时任务.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/定时任务.png">]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Valine</tag>
+        <tag>LeanCloud</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>产品版本规则</title>
     <url>/2022/07/17/%E4%BA%A7%E5%93%81%E7%89%88%E6%9C%AC%E8%A7%84%E5%88%99/</url>
     <content><![CDATA[<ul>
@@ -836,36 +864,44 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Nexus托管npm私有仓库</title>
-    <url>/2022/09/11/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</url>
-    <content><![CDATA[<h2 id="1-安装Nexus"><a href="#1-安装Nexus" class="headerlink" title="1.安装Nexus"></a>1.安装Nexus</h2><h3 id="1-1-前置条件"><a href="#1-1-前置条件" class="headerlink" title="1.1.前置条件"></a>1.1.前置条件</h3><p>nexus需要运行在jdk1.8及以上环境</p>
-<h3 id="1-2-下载"><a href="#1-2-下载" class="headerlink" title="1.2.下载"></a>1.2.下载</h3><p>链接：<a href="https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q">https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q</a>，提取码：hsnr</p>
-<h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3.安装"></a>1.3.安装</h3><p>直接解压即可，解压后会有两个目录：</p>
-<ul>
-<li>nexus-3.18.1-01：nexus私服管理界面的容器，内部集成了jetty</li>
-<li>sonatype-work：私服的默认仓库，用于存储索引和组件资源</li>
-</ul>
-<h3 id="1-4-启动"><a href="#1-4-启动" class="headerlink" title="1.4.启动"></a>1.4.启动</h3><p>进入nexus-3.18.1-01&#x2F;bin&#x2F;目录，<code>./nexus run</code></p>
-<h3 id="1-5-访问"><a href="#1-5-访问" class="headerlink" title="1.5.访问"></a>1.5.访问</h3><p>浏览器输入<a href="http://ip:8081/">http://ip:8081</a></p>
-<h3 id="1-6-登录"><a href="#1-6-登录" class="headerlink" title="1.6.登录"></a>1.6.登录</h3><p>默认用户名admin，会提示默认密码在安装包的什么位置<br><em>windows虚拟机上的密码改为了Talent123</em></p>
-<h3 id="1-7-Create-repository"><a href="#1-7-Create-repository" class="headerlink" title="1.7.Create repository"></a>1.7.Create repository</h3><p><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E5%88%9B%E5%BB%BA%E4%BB%93.jpg" alt="创建仓.jpg"><br>其中，npm（hosted）可设置包的发布策略，是否允许重新发布，如果不允许重新发布，则每次发布包，均需升级版本号<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E9%87%8D%E6%96%B0%E5%8F%91%E5%B8%83.jpg" alt="是否允许重新发布.jpg"></p>
-<h2 id="2-CentOS7下将Nexus设置为系统服务"><a href="#2-CentOS7下将Nexus设置为系统服务" class="headerlink" title="2.CentOS7下将Nexus设置为系统服务"></a>2.CentOS7下将Nexus设置为系统服务</h2><h3 id="2-1-修改nexus启动脚本"><a href="#2-1-修改nexus启动脚本" class="headerlink" title="2.1.修改nexus启动脚本"></a>2.1.修改nexus启动脚本</h3><p>修改脚本第14行：<code>INSTALL4J_JAVA_HOME_OVERRIDE=/root/jdk_1.8.0_231  // jdk安装路径</code><br>否则，可能会出现以下错误：<br><img width="460" alt="可能出现的错误.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/使用Nexus托管npm私有仓库/可能出现的错误.png"></p>
-<h3 id="2-2-配置系统服务"><a href="#2-2-配置系统服务" class="headerlink" title="2.2.配置系统服务"></a>2.2.配置系统服务</h3><p>设置软连接：<br><code>sudo ln -s /opt/nexus-3.18.1-01/bin/nexus /etc/init.d/nexus</code></p>
-<p>采用systemd的方式配置服务</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/systemd/system</span><br><span class="line">vi nexus.service</span><br><span class="line"></span><br><span class="line">在nexus.service文件中添加以下内容：</span><br><span class="line">[Unit]</span><br><span class="line">Description=nexus service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/nexus-3.18.1-01/bin/nexus start  #nexus的安装目录</span><br><span class="line">ExecStop=/opt/nexus-3.18.1-01/bin/nexus stop</span><br><span class="line">User=root  #系统用户名</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+    <title>使用Vite构建Vue3组件库</title>
+    <url>/2023/01/11/%E4%BD%BF%E7%94%A8Vite%E6%9E%84%E5%BB%BAVue3%E7%BB%84%E4%BB%B6%E5%BA%93/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>当我们使用Angular开发库项目时，直接通过<code>ng g lib [name]</code>在当前工作空间中创建一个新的通用库项目即可，Angular会帮我们把依赖、配置甚至打包命令都设置好，还是相当方便的。</p>
+<p>但当我们使用Vite + Vue3开发库项目时，该如何做呢？通过查Vite官方文档<a href="https://cn.vitejs.dev/guide/build.html#library-mode">库模式</a>发现，其介绍过于简单，因此这里做一个整理分享。</p>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><h4 id="一、初始化工程"><a href="#一、初始化工程" class="headerlink" title="一、初始化工程"></a>一、初始化工程</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm init vite@latest test1 --template vue-ts</span><br><span class="line">npm i --save-dev path  // 后面vite.config.ts中会用到</span><br></pre></td></tr></table></figure>
 
-<p>分别执行以下命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload #重新加载服务</span><br><span class="line">sudo systemctl enable nexus.service #开启开机自启动服务</span><br><span class="line">sudo systemctl start nexus.service #启动服务</span><br></pre></td></tr></table></figure>
+<h4 id="二、开发组件"><a href="#二、开发组件" class="headerlink" title="二、开发组件"></a>二、开发组件</h4><p>首先添加<code>packages\Button\src\MzButton.vue</code>文件用于编写组件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script setup lang=&quot;ts&quot;&gt;</span><br><span class="line"></span><br><span class="line">defineProps&lt;&#123; msg: string &#125;&gt;()</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;mz-button&quot;&gt;这是一个按钮：&#123;&#123; msg &#125;&#125;&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.mz-button &#123;</span><br><span class="line">  padding: 10px;</span><br><span class="line">  border: solid 1px #5d5d5d;</span><br><span class="line">  border-radius: 3px;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
 
-<hr>
-<p>由于自己是在虚拟机上安装的，本机访问没有问题，但其他主机访问不到服务，故还需做如下配置：<br><a href="https://www.cnblogs.com/mkl34367803/p/10095055.html">如何让局域网中的其他主机访问虚拟机</a></p>
-]]></content>
+<p>再添加<code>packages\Button\index.js</code>文件用于导出该组件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import MzButton from &#x27;./src/MzButton.vue&#x27;;</span><br><span class="line"></span><br><span class="line">MzButton.install = (App) =&gt; &#123;</span><br><span class="line">  App.component(MzButton.__name, MzButton);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default MzButton;</span><br></pre></td></tr></table></figure>
+
+<p>再添加<code>packages\index.js</code>文件，用于导出所有的组件（这里其实只有一个组件，多组件只要在此基础上扩展即可），内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import MzButton from &#x27;./Button&#x27;;</span><br><span class="line"></span><br><span class="line">// 按需导入</span><br><span class="line">export &#123; MzButton &#125;;</span><br><span class="line"></span><br><span class="line">const components = [MzButton];</span><br><span class="line"></span><br><span class="line">const install = (App) =&gt; &#123;</span><br><span class="line">  components.forEach(item =&gt; &#123;</span><br><span class="line">    App.component(item.__name, item);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  install</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="三、配置vite-config-ts文件"><a href="#三、配置vite-config-ts文件" class="headerlink" title="三、配置vite.config.ts文件"></a>三、配置vite.config.ts文件</h4><p>修改<code>vite.config.js</code>文件，对其进行配置修改成库打包的模式，这里输出内容到<code>lib</code>文件夹中，打包入口文件设置为<code>./packages/index.js</code>文件，最终配置如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &#123; defineConfig &#125; from &#x27;vite&#x27;</span><br><span class="line">import vue from &#x27;@vitejs/plugin-vue&#x27;</span><br><span class="line">import &#123; resolve &#125; from &#x27;path&#x27;</span><br><span class="line"></span><br><span class="line">// https://vitejs.dev/config/</span><br><span class="line">export default defineConfig(&#123;</span><br><span class="line">  plugins: [vue()],</span><br><span class="line">  build: &#123;</span><br><span class="line">    outDir: &#x27;lib&#x27;,</span><br><span class="line">    lib: &#123;</span><br><span class="line">      entry: resolve(__dirname, &#x27;packages/index.js&#x27;),</span><br><span class="line">      name: &#x27;MzTest&#x27;,</span><br><span class="line">      // the proper extensions will be added</span><br><span class="line">      fileName: &#x27;mz-test&#x27;</span><br><span class="line">    &#125;,</span><br><span class="line">    rollupOptions: &#123;</span><br><span class="line">      // 确保外部化处理那些你不想打包进库的依赖</span><br><span class="line">      external: [&#x27;vue&#x27;],</span><br><span class="line">      output: &#123;</span><br><span class="line">        // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量</span><br><span class="line">        globals: &#123;</span><br><span class="line">          vue: &#x27;Vue&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="四、打包输出lib库"><a href="#四、打包输出lib库" class="headerlink" title="四、打包输出lib库"></a>四、打包输出lib库</h4><p>执行<code>npm run build</code>，根据上面的配置文件会在根目录生成一个lib文件夹，里面包含了UMD、ESM规范打包的几个js库文件，还有css样式文件，整个组件库文件最终都会输出在lib文件夹下。</p>
+<h4 id="五、准备package-json"><a href="#五、准备package-json" class="headerlink" title="五、准备package.json"></a>五、准备package.json</h4><p>配置package.json，内容如下（需要删除注释）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;mz-test&quot;,</span><br><span class="line">  &quot;private&quot;: false,  // 公开可下载</span><br><span class="line">  &quot;version&quot;: &quot;0.0.1&quot;,</span><br><span class="line">  &quot;keywords&quot;: [],  // 在npm上可被搜索的关键字</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;dev&quot;: &quot;vite&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;vue-tsc --noEmit &amp;&amp; vite build&quot;,</span><br><span class="line">    &quot;preview&quot;: &quot;vite preview&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;files&quot;: [&quot;lib&quot;],</span><br><span class="line">  &quot;main&quot;: &quot;lib/mz-test.umd.js&quot;,  // 包函数入口文件</span><br><span class="line">  &quot;module&quot;: &quot;lib/mz-test.js&quot;,    // ESM标准入口</span><br><span class="line">  &quot;exports&quot;: &#123;</span><br><span class="line">    &quot;./lib/style.css&quot;: &quot;./lib/style.css&quot;,</span><br><span class="line">    &quot;.&quot;: &#123;</span><br><span class="line">      &quot;import&quot;: &quot;./lib/mz-test.js&quot;,</span><br><span class="line">      &quot;require&quot;: &quot;./lib/mz-test.umd.js&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,  // 向外暴露的文件 node规范</span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;vue&quot;: &quot;^3.2.37&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;@vitejs/plugin-vue&quot;: &quot;^3.1.0&quot;,</span><br><span class="line">    &quot;vite&quot;: &quot;^3.1.0&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在根目录添加一个<code>.npmignore</code>文件，其作用是忽略不需要上传的文件内容，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Logs</span><br><span class="line">logs</span><br><span class="line">*.log</span><br><span class="line">npm-debug.log*</span><br><span class="line">yarn-debug.log*</span><br><span class="line">yarn-error.log*</span><br><span class="line">pnpm-debug.log*</span><br><span class="line">lerna-debug.log*</span><br><span class="line"></span><br><span class="line">node_modules</span><br><span class="line">dist</span><br><span class="line">dist-ssr</span><br><span class="line">*.local</span><br><span class="line"></span><br><span class="line"># Editor directories and files</span><br><span class="line">.vscode/*</span><br><span class="line">!.vscode/extensions.json</span><br><span class="line">.idea</span><br><span class="line">.DS_Store</span><br><span class="line">*.suo</span><br><span class="line">*.ntvs*</span><br><span class="line">*.njsproj</span><br><span class="line">*.sln</span><br><span class="line">*.sw?</span><br><span class="line"></span><br><span class="line">packages/</span><br><span class="line">public/</span><br><span class="line">src/</span><br><span class="line">.gitignore</span><br><span class="line">.npmignore</span><br><span class="line">*.html</span><br><span class="line">package-lock.json</span><br><span class="line">tsconfig.json</span><br><span class="line">tsconfig.node.json</span><br><span class="line">vite.config.ts</span><br></pre></td></tr></table></figure>
+
+<p>至此就可以将lib库上传至npm了。</p>
+<p>如果想要本地打包，则直接<code>npm pack</code>即可，这样就会在根目录下生成一个<code>mz-test-0.0.1.tgz</code>。</p>
+<h3 id="使用组件"><a href="#使用组件" class="headerlink" title="使用组件"></a>使用组件</h3><h4 id="一、安装组件"><a href="#一、安装组件" class="headerlink" title="一、安装组件"></a>一、安装组件</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm i mz-test 或 npm i file:mz-test-0.0.1.tgz</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、全局使用方法"><a href="#二、全局使用方法" class="headerlink" title="二、全局使用方法"></a>二、全局使用方法</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// main.ts</span><br><span class="line">import &#123; createApp &#125; from &#x27;vue&#x27;</span><br><span class="line">import &#x27;./style.css&#x27;</span><br><span class="line">import App from &#x27;./App.vue&#x27;</span><br><span class="line"></span><br><span class="line">import MzTest from &#x27;mz-test&#x27;;  // 在ts文件中会报错，在vite-env.d.ts中添加declare module &#x27;mz-test&#x27;即可</span><br><span class="line">import &#x27;mz-test/lib/style.css&#x27;;</span><br><span class="line"></span><br><span class="line">createApp(App).use(MzTest).mount(&#x27;#app&#x27;)</span><br><span class="line"></span><br><span class="line">// 组件中</span><br><span class="line">&lt;mz-button&gt;&lt;/mz-button&gt; 或 &lt;MzButton&gt;&lt;/MzButton&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="三、局部使用方法"><a href="#三、局部使用方法" class="headerlink" title="三、局部使用方法"></a>三、局部使用方法</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// main.ts</span><br><span class="line">import &#x27;mz-test/lib/style.css&#x27;;</span><br><span class="line"></span><br><span class="line">// 组件中</span><br><span class="line">import &#123; MzButton &#125; from &#x27;mz-test&#x27;</span><br><span class="line"></span><br><span class="line">&lt;mz-button&gt;&lt;/mz-button&gt; 或 &lt;MzButton&gt;&lt;/MzButton&gt;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>工具</category>
+        <category>Vue</category>
       </categories>
       <tags>
-        <tag>Nexus</tag>
-        <tag>npm私服</tag>
+        <tag>Vite</tag>
+        <tag>Vue3组件库</tag>
       </tags>
   </entry>
   <entry>
@@ -911,87 +947,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Vite构建Vue3组件库</title>
-    <url>/2023/01/11/%E4%BD%BF%E7%94%A8Vite%E6%9E%84%E5%BB%BAVue3%E7%BB%84%E4%BB%B6%E5%BA%93/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>当我们使用Angular开发库项目时，直接通过<code>ng g lib [name]</code>在当前工作空间中创建一个新的通用库项目即可，Angular会帮我们把依赖、配置甚至打包命令都设置好，还是相当方便的。</p>
-<p>但当我们使用Vite + Vue3开发库项目时，该如何做呢？通过查Vite官方文档<a href="https://cn.vitejs.dev/guide/build.html#library-mode">库模式</a>发现，其介绍过于简单，因此这里做一个整理分享。</p>
-<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><h4 id="一、初始化工程"><a href="#一、初始化工程" class="headerlink" title="一、初始化工程"></a>一、初始化工程</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm init vite@latest test1 --template vue-ts</span><br><span class="line">npm i --save-dev path  // 后面vite.config.ts中会用到</span><br></pre></td></tr></table></figure>
-
-<h4 id="二、开发组件"><a href="#二、开发组件" class="headerlink" title="二、开发组件"></a>二、开发组件</h4><p>首先添加<code>packages\Button\src\MzButton.vue</code>文件用于编写组件，内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script setup lang=&quot;ts&quot;&gt;</span><br><span class="line"></span><br><span class="line">defineProps&lt;&#123; msg: string &#125;&gt;()</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;mz-button&quot;&gt;这是一个按钮：&#123;&#123; msg &#125;&#125;&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.mz-button &#123;</span><br><span class="line">  padding: 10px;</span><br><span class="line">  border: solid 1px #5d5d5d;</span><br><span class="line">  border-radius: 3px;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<p>再添加<code>packages\Button\index.js</code>文件用于导出该组件，内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import MzButton from &#x27;./src/MzButton.vue&#x27;;</span><br><span class="line"></span><br><span class="line">MzButton.install = (App) =&gt; &#123;</span><br><span class="line">  App.component(MzButton.__name, MzButton);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default MzButton;</span><br></pre></td></tr></table></figure>
-
-<p>再添加<code>packages\index.js</code>文件，用于导出所有的组件（这里其实只有一个组件，多组件只要在此基础上扩展即可），内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import MzButton from &#x27;./Button&#x27;;</span><br><span class="line"></span><br><span class="line">// 按需导入</span><br><span class="line">export &#123; MzButton &#125;;</span><br><span class="line"></span><br><span class="line">const components = [MzButton];</span><br><span class="line"></span><br><span class="line">const install = (App) =&gt; &#123;</span><br><span class="line">  components.forEach(item =&gt; &#123;</span><br><span class="line">    App.component(item.__name, item);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  install</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h4 id="三、配置vite-config-ts文件"><a href="#三、配置vite-config-ts文件" class="headerlink" title="三、配置vite.config.ts文件"></a>三、配置vite.config.ts文件</h4><p>修改<code>vite.config.js</code>文件，对其进行配置修改成库打包的模式，这里输出内容到<code>lib</code>文件夹中，打包入口文件设置为<code>./packages/index.js</code>文件，最终配置如下所示：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &#123; defineConfig &#125; from &#x27;vite&#x27;</span><br><span class="line">import vue from &#x27;@vitejs/plugin-vue&#x27;</span><br><span class="line">import &#123; resolve &#125; from &#x27;path&#x27;</span><br><span class="line"></span><br><span class="line">// https://vitejs.dev/config/</span><br><span class="line">export default defineConfig(&#123;</span><br><span class="line">  plugins: [vue()],</span><br><span class="line">  build: &#123;</span><br><span class="line">    outDir: &#x27;lib&#x27;,</span><br><span class="line">    lib: &#123;</span><br><span class="line">      entry: resolve(__dirname, &#x27;packages/index.js&#x27;),</span><br><span class="line">      name: &#x27;MzTest&#x27;,</span><br><span class="line">      // the proper extensions will be added</span><br><span class="line">      fileName: &#x27;mz-test&#x27;</span><br><span class="line">    &#125;,</span><br><span class="line">    rollupOptions: &#123;</span><br><span class="line">      // 确保外部化处理那些你不想打包进库的依赖</span><br><span class="line">      external: [&#x27;vue&#x27;],</span><br><span class="line">      output: &#123;</span><br><span class="line">        // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量</span><br><span class="line">        globals: &#123;</span><br><span class="line">          vue: &#x27;Vue&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h4 id="四、打包输出lib库"><a href="#四、打包输出lib库" class="headerlink" title="四、打包输出lib库"></a>四、打包输出lib库</h4><p>执行<code>npm run build</code>，根据上面的配置文件会在根目录生成一个lib文件夹，里面包含了UMD、ESM规范打包的几个js库文件，还有css样式文件，整个组件库文件最终都会输出在lib文件夹下。</p>
-<h4 id="五、准备package-json"><a href="#五、准备package-json" class="headerlink" title="五、准备package.json"></a>五、准备package.json</h4><p>配置package.json，内容如下（需要删除注释）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;mz-test&quot;,</span><br><span class="line">  &quot;private&quot;: false,  // 公开可下载</span><br><span class="line">  &quot;version&quot;: &quot;0.0.1&quot;,</span><br><span class="line">  &quot;keywords&quot;: [],  // 在npm上可被搜索的关键字</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;dev&quot;: &quot;vite&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;vue-tsc --noEmit &amp;&amp; vite build&quot;,</span><br><span class="line">    &quot;preview&quot;: &quot;vite preview&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;files&quot;: [&quot;lib&quot;],</span><br><span class="line">  &quot;main&quot;: &quot;lib/mz-test.umd.js&quot;,  // 包函数入口文件</span><br><span class="line">  &quot;module&quot;: &quot;lib/mz-test.js&quot;,    // ESM标准入口</span><br><span class="line">  &quot;exports&quot;: &#123;</span><br><span class="line">    &quot;./lib/style.css&quot;: &quot;./lib/style.css&quot;,</span><br><span class="line">    &quot;.&quot;: &#123;</span><br><span class="line">      &quot;import&quot;: &quot;./lib/mz-test.js&quot;,</span><br><span class="line">      &quot;require&quot;: &quot;./lib/mz-test.umd.js&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,  // 向外暴露的文件 node规范</span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;vue&quot;: &quot;^3.2.37&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;@vitejs/plugin-vue&quot;: &quot;^3.1.0&quot;,</span><br><span class="line">    &quot;vite&quot;: &quot;^3.1.0&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在根目录添加一个<code>.npmignore</code>文件，其作用是忽略不需要上传的文件内容，内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Logs</span><br><span class="line">logs</span><br><span class="line">*.log</span><br><span class="line">npm-debug.log*</span><br><span class="line">yarn-debug.log*</span><br><span class="line">yarn-error.log*</span><br><span class="line">pnpm-debug.log*</span><br><span class="line">lerna-debug.log*</span><br><span class="line"></span><br><span class="line">node_modules</span><br><span class="line">dist</span><br><span class="line">dist-ssr</span><br><span class="line">*.local</span><br><span class="line"></span><br><span class="line"># Editor directories and files</span><br><span class="line">.vscode/*</span><br><span class="line">!.vscode/extensions.json</span><br><span class="line">.idea</span><br><span class="line">.DS_Store</span><br><span class="line">*.suo</span><br><span class="line">*.ntvs*</span><br><span class="line">*.njsproj</span><br><span class="line">*.sln</span><br><span class="line">*.sw?</span><br><span class="line"></span><br><span class="line">packages/</span><br><span class="line">public/</span><br><span class="line">src/</span><br><span class="line">.gitignore</span><br><span class="line">.npmignore</span><br><span class="line">*.html</span><br><span class="line">package-lock.json</span><br><span class="line">tsconfig.json</span><br><span class="line">tsconfig.node.json</span><br><span class="line">vite.config.ts</span><br></pre></td></tr></table></figure>
-
-<p>至此就可以将lib库上传至npm了。</p>
-<p>如果想要本地打包，则直接<code>npm pack</code>即可，这样就会在根目录下生成一个<code>mz-test-0.0.1.tgz</code>。</p>
-<h3 id="使用组件"><a href="#使用组件" class="headerlink" title="使用组件"></a>使用组件</h3><h4 id="一、安装组件"><a href="#一、安装组件" class="headerlink" title="一、安装组件"></a>一、安装组件</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm i mz-test 或 npm i file:mz-test-0.0.1.tgz</span><br></pre></td></tr></table></figure>
-
-<h4 id="二、全局使用方法"><a href="#二、全局使用方法" class="headerlink" title="二、全局使用方法"></a>二、全局使用方法</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// main.ts</span><br><span class="line">import &#123; createApp &#125; from &#x27;vue&#x27;</span><br><span class="line">import &#x27;./style.css&#x27;</span><br><span class="line">import App from &#x27;./App.vue&#x27;</span><br><span class="line"></span><br><span class="line">import MzTest from &#x27;mz-test&#x27;;  // 在ts文件中会报错，在vite-env.d.ts中添加declare module &#x27;mz-test&#x27;即可</span><br><span class="line">import &#x27;mz-test/lib/style.css&#x27;;</span><br><span class="line"></span><br><span class="line">createApp(App).use(MzTest).mount(&#x27;#app&#x27;)</span><br><span class="line"></span><br><span class="line">// 组件中</span><br><span class="line">&lt;mz-button&gt;&lt;/mz-button&gt; 或 &lt;MzButton&gt;&lt;/MzButton&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="三、局部使用方法"><a href="#三、局部使用方法" class="headerlink" title="三、局部使用方法"></a>三、局部使用方法</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// main.ts</span><br><span class="line">import &#x27;mz-test/lib/style.css&#x27;;</span><br><span class="line"></span><br><span class="line">// 组件中</span><br><span class="line">import &#123; MzButton &#125; from &#x27;mz-test&#x27;</span><br><span class="line"></span><br><span class="line">&lt;mz-button&gt;&lt;/mz-button&gt; 或 &lt;MzButton&gt;&lt;/MzButton&gt;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Vue</category>
-      </categories>
-      <tags>
-        <tag>Vite</tag>
-        <tag>Vue3组件库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用nrm管理切换多个npm registry地址</title>
-    <url>/2023/03/15/%E4%BD%BF%E7%94%A8nrm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnpm-registry%E5%9C%B0%E5%9D%80/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家在工作时可能需要连接公司的私服下载前端依赖，这个时候会把npm的地址设置为公司的私服，但是这样的话自己开发自己的项目所需要的依赖在公司私服上找不到，因此又得重新设置npm下载的地址，因此在这推荐一个插件能够很方便的切换公司私服地址和淘宝镜像地址。</p>
-<h2 id="一、nrm"><a href="#一、nrm" class="headerlink" title="一、nrm"></a>一、nrm</h2><p>nrm（npm registry manager）是npm的镜像管理工具，用来切换npm下载镜像源</p>
-<h2 id="二、使用步骤"><a href="#二、使用步骤" class="headerlink" title="二、使用步骤"></a>二、使用步骤</h2><h3 id="1、安装nrm"><a href="#1、安装nrm" class="headerlink" title="1、安装nrm"></a>1、安装nrm</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm i -g nrm</span><br></pre></td></tr></table></figure>
-<p>安装之后，可通过<code>nrm ls</code>查看默认提供的镜像源</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm ---------- https://registry.npmjs.org/</span><br><span class="line">yarn --------- https://registry.yarnpkg.com/</span><br><span class="line">tencent ------ https://mirrors.cloud.tencent.com/npm/</span><br><span class="line">cnpm --------- https://r.cnpmjs.org/</span><br><span class="line">taobao ------- https://registry.npmmirror.com/</span><br><span class="line">npmMirror ---- https://skimdb.npmjs.com/registry/</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、添加registry"><a href="#2、添加registry" class="headerlink" title="2、添加registry"></a>2、添加registry</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nrm add topsec http://10.63.78.76/repository/npm-group/</span><br><span class="line">// topsec 为自定义名称</span><br><span class="line">// 成功将会提示：add registry topsec success</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、切换registry"><a href="#3、切换registry" class="headerlink" title="3、切换registry"></a>3、切换registry</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nrm use topsec</span><br><span class="line">// 成功将会提示：Registry has been set to: http://10.63.78.76/repository/npm-group/</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>nrm</tag>
-        <tag>npm源管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用nvm管理切换多个node版本</title>
-    <url>/2023/03/10/%E4%BD%BF%E7%94%A8nvm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnode%E7%89%88%E6%9C%AC/</url>
-    <content><![CDATA[<h2 id="1、Node版本管理工具"><a href="#1、Node版本管理工具" class="headerlink" title="1、Node版本管理工具"></a>1、Node版本管理工具</h2><p>node版本管理工具其实有很多，常见的的有nvm、n、fnm。之前一直使用n来管理node版本的，但是忽然有一天发现，安装n之前是需要先安装node的，而先安装的这一版本的node，不在n的管理范畴中，基于这两点原因，放弃了n的使用，转向了nvm。<br>本文主要记录下nvm的安装步骤和常用命令。</p>
-<h2 id="2、nvm的安装"><a href="#2、nvm的安装" class="headerlink" title="2、nvm的安装"></a>2、nvm的安装</h2><p>网上关于nvm安装的文章也挺多的，大多都是让你执行</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash</span><br></pre></td></tr></table></figure>
-<p>包括<a href="https://github.com/nvm-sh/nvm">Github</a>上也是这么写的，但一般由于网络原因，都是不能成功的，即便我开了科学上网，也没能成功。<br><strong>所以建议：</strong><br>直接从上述Github仓的<a href="https://github.com/nvm-sh/nvm/tags">Tags</a>里，下载最新版本的zip包，解压之后，运行包里的<code>install.sh</code>即可。<br>然后将如下代码粘贴到你的<code>～/.base_profile</code>文件中，保证nvm命令能够正常使用。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export NVM_DIR=&quot;$([ -z &quot;$&#123;XDG_CONFIG_HOME-&#125;&quot; ] &amp;&amp; printf %s &quot;$&#123;HOME&#125;/.nvm&quot; || printf %s &quot;$&#123;XDG_CONFIG_HOME&#125;/nvm&quot;)&quot;</span><br><span class="line">[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; \. &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm</span><br></pre></td></tr></table></figure>
-
-<h2 id="3、nvm常用命令"><a href="#3、nvm常用命令" class="headerlink" title="3、nvm常用命令"></a>3、nvm常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm ls                #列出已安装的node版本</span><br><span class="line">nvm ls-remote         #列出所有可用的node版本</span><br><span class="line">nvm use &lt;version&gt;     #使用指定版本的node</span><br><span class="line">nvm install &lt;version&gt; #安装指定版本的node</span><br><span class="line">nvm current           #显示当前正在使用的node版本</span><br><span class="line">nvm cache clear       #清空nvm缓存</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>nvm</tag>
-        <tag>Node版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>关于commitlint和husky的安装和使用</title>
     <url>/2023/01/11/%E5%85%B3%E4%BA%8Ecommitlint%E5%92%8Chusky%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p>现在大部分公司和项目用的代码管理工具基本都是git，在一个大的项目组中，会涉及很多的开发人员，这就会面临着频繁的提交代码。规范的提交代码规则会有利于问题的查找和回归，所以提交规范变得尤其的重要。下面我会为大家介绍一下，关于git的代码提交规则的约束工具：commitlint和husky。</p>
@@ -1025,6 +980,79 @@
         <tag>git hooks</tag>
         <tag>commitlint</tag>
         <tag>husky</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用nvm管理切换多个node版本</title>
+    <url>/2023/03/10/%E4%BD%BF%E7%94%A8nvm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnode%E7%89%88%E6%9C%AC/</url>
+    <content><![CDATA[<h2 id="1、Node版本管理工具"><a href="#1、Node版本管理工具" class="headerlink" title="1、Node版本管理工具"></a>1、Node版本管理工具</h2><p>node版本管理工具其实有很多，常见的的有nvm、n、fnm。之前一直使用n来管理node版本的，但是忽然有一天发现，安装n之前是需要先安装node的，而先安装的这一版本的node，不在n的管理范畴中，基于这两点原因，放弃了n的使用，转向了nvm。<br>本文主要记录下nvm的安装步骤和常用命令。</p>
+<h2 id="2、nvm的安装"><a href="#2、nvm的安装" class="headerlink" title="2、nvm的安装"></a>2、nvm的安装</h2><p>网上关于nvm安装的文章也挺多的，大多都是让你执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash</span><br></pre></td></tr></table></figure>
+<p>包括<a href="https://github.com/nvm-sh/nvm">Github</a>上也是这么写的，但一般由于网络原因，都是不能成功的，即便我开了科学上网，也没能成功。<br><strong>所以建议：</strong><br>直接从上述Github仓的<a href="https://github.com/nvm-sh/nvm/tags">Tags</a>里，下载最新版本的zip包，解压之后，运行包里的<code>install.sh</code>即可。<br>然后将如下代码粘贴到你的<code>～/.base_profile</code>文件中，保证nvm命令能够正常使用。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export NVM_DIR=&quot;$([ -z &quot;$&#123;XDG_CONFIG_HOME-&#125;&quot; ] &amp;&amp; printf %s &quot;$&#123;HOME&#125;/.nvm&quot; || printf %s &quot;$&#123;XDG_CONFIG_HOME&#125;/nvm&quot;)&quot;</span><br><span class="line">[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; \. &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、nvm常用命令"><a href="#3、nvm常用命令" class="headerlink" title="3、nvm常用命令"></a>3、nvm常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm ls                #列出已安装的node版本</span><br><span class="line">nvm ls-remote         #列出所有可用的node版本</span><br><span class="line">nvm use &lt;version&gt;     #使用指定版本的node</span><br><span class="line">nvm install &lt;version&gt; #安装指定版本的node</span><br><span class="line">nvm current           #显示当前正在使用的node版本</span><br><span class="line">nvm cache clear       #清空nvm缓存</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>nvm</tag>
+        <tag>Node版本管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用nrm管理切换多个npm registry地址</title>
+    <url>/2023/03/15/%E4%BD%BF%E7%94%A8nrm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnpm-registry%E5%9C%B0%E5%9D%80/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家在工作时可能需要连接公司的私服下载前端依赖，这个时候会把npm的地址设置为公司的私服，但是这样的话自己开发自己的项目所需要的依赖在公司私服上找不到，因此又得重新设置npm下载的地址，因此在这推荐一个插件能够很方便的切换公司私服地址和淘宝镜像地址。</p>
+<h2 id="一、nrm"><a href="#一、nrm" class="headerlink" title="一、nrm"></a>一、nrm</h2><p>nrm（npm registry manager）是npm的镜像管理工具，用来切换npm下载镜像源</p>
+<h2 id="二、使用步骤"><a href="#二、使用步骤" class="headerlink" title="二、使用步骤"></a>二、使用步骤</h2><h3 id="1、安装nrm"><a href="#1、安装nrm" class="headerlink" title="1、安装nrm"></a>1、安装nrm</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm i -g nrm</span><br></pre></td></tr></table></figure>
+<p>安装之后，可通过<code>nrm ls</code>查看默认提供的镜像源</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm ---------- https://registry.npmjs.org/</span><br><span class="line">yarn --------- https://registry.yarnpkg.com/</span><br><span class="line">tencent ------ https://mirrors.cloud.tencent.com/npm/</span><br><span class="line">cnpm --------- https://r.cnpmjs.org/</span><br><span class="line">taobao ------- https://registry.npmmirror.com/</span><br><span class="line">npmMirror ---- https://skimdb.npmjs.com/registry/</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、添加registry"><a href="#2、添加registry" class="headerlink" title="2、添加registry"></a>2、添加registry</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nrm add topsec http://10.63.78.76/repository/npm-group/</span><br><span class="line">// topsec 为自定义名称</span><br><span class="line">// 成功将会提示：add registry topsec success</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、切换registry"><a href="#3、切换registry" class="headerlink" title="3、切换registry"></a>3、切换registry</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nrm use topsec</span><br><span class="line">// 成功将会提示：Registry has been set to: http://10.63.78.76/repository/npm-group/</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>nrm</tag>
+        <tag>npm源管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Nexus托管npm私有仓库</title>
+    <url>/2022/09/11/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</url>
+    <content><![CDATA[<h2 id="1-安装Nexus"><a href="#1-安装Nexus" class="headerlink" title="1.安装Nexus"></a>1.安装Nexus</h2><h3 id="1-1-前置条件"><a href="#1-1-前置条件" class="headerlink" title="1.1.前置条件"></a>1.1.前置条件</h3><p>nexus需要运行在jdk1.8及以上环境</p>
+<h3 id="1-2-下载"><a href="#1-2-下载" class="headerlink" title="1.2.下载"></a>1.2.下载</h3><p>链接：<a href="https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q">https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q</a>，提取码：hsnr</p>
+<h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3.安装"></a>1.3.安装</h3><p>直接解压即可，解压后会有两个目录：</p>
+<ul>
+<li>nexus-3.18.1-01：nexus私服管理界面的容器，内部集成了jetty</li>
+<li>sonatype-work：私服的默认仓库，用于存储索引和组件资源</li>
+</ul>
+<h3 id="1-4-启动"><a href="#1-4-启动" class="headerlink" title="1.4.启动"></a>1.4.启动</h3><p>进入nexus-3.18.1-01&#x2F;bin&#x2F;目录，<code>./nexus run</code></p>
+<h3 id="1-5-访问"><a href="#1-5-访问" class="headerlink" title="1.5.访问"></a>1.5.访问</h3><p>浏览器输入<a href="http://ip:8081/">http://ip:8081</a></p>
+<h3 id="1-6-登录"><a href="#1-6-登录" class="headerlink" title="1.6.登录"></a>1.6.登录</h3><p>默认用户名admin，会提示默认密码在安装包的什么位置<br><em>windows虚拟机上的密码改为了Talent123</em></p>
+<h3 id="1-7-Create-repository"><a href="#1-7-Create-repository" class="headerlink" title="1.7.Create repository"></a>1.7.Create repository</h3><p><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E5%88%9B%E5%BB%BA%E4%BB%93.jpg" alt="创建仓.jpg"><br>其中，npm（hosted）可设置包的发布策略，是否允许重新发布，如果不允许重新发布，则每次发布包，均需升级版本号<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E9%87%8D%E6%96%B0%E5%8F%91%E5%B8%83.jpg" alt="是否允许重新发布.jpg"></p>
+<h2 id="2-CentOS7下将Nexus设置为系统服务"><a href="#2-CentOS7下将Nexus设置为系统服务" class="headerlink" title="2.CentOS7下将Nexus设置为系统服务"></a>2.CentOS7下将Nexus设置为系统服务</h2><h3 id="2-1-修改nexus启动脚本"><a href="#2-1-修改nexus启动脚本" class="headerlink" title="2.1.修改nexus启动脚本"></a>2.1.修改nexus启动脚本</h3><p>修改脚本第14行：<code>INSTALL4J_JAVA_HOME_OVERRIDE=/root/jdk_1.8.0_231  // jdk安装路径</code><br>否则，可能会出现以下错误：<br><img width="460" alt="可能出现的错误.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/使用Nexus托管npm私有仓库/可能出现的错误.png"></p>
+<h3 id="2-2-配置系统服务"><a href="#2-2-配置系统服务" class="headerlink" title="2.2.配置系统服务"></a>2.2.配置系统服务</h3><p>设置软连接：<br><code>sudo ln -s /opt/nexus-3.18.1-01/bin/nexus /etc/init.d/nexus</code></p>
+<p>采用systemd的方式配置服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/systemd/system</span><br><span class="line">vi nexus.service</span><br><span class="line"></span><br><span class="line">在nexus.service文件中添加以下内容：</span><br><span class="line">[Unit]</span><br><span class="line">Description=nexus service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/nexus-3.18.1-01/bin/nexus start  #nexus的安装目录</span><br><span class="line">ExecStop=/opt/nexus-3.18.1-01/bin/nexus stop</span><br><span class="line">User=root  #系统用户名</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>分别执行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload #重新加载服务</span><br><span class="line">sudo systemctl enable nexus.service #开启开机自启动服务</span><br><span class="line">sudo systemctl start nexus.service #启动服务</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>由于自己是在虚拟机上安装的，本机访问没有问题，但其他主机访问不到服务，故还需做如下配置：<br><a href="https://www.cnblogs.com/mkl34367803/p/10095055.html">如何让局域网中的其他主机访问虚拟机</a></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>Nexus</tag>
+        <tag>npm私服</tag>
       </tags>
   </entry>
   <entry>
@@ -1062,71 +1090,6 @@
         <tag>inquirer</tag>
         <tag>node-ssh</tag>
         <tag>sshpass</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>可视化技术选型</title>
-    <url>/2022/07/16/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="架构对比"><a href="#架构对比" class="headerlink" title="架构对比"></a>架构对比</h2><ul>
-<li>BS 架构：Unity、WebGL、Threejs</li>
-<li>CS 架构：Unity、UE4、Ventuz</li>
-<li>因为 Ventuz 是国外收费引擎，因此下面内容不做对比。</li>
-</ul>
-<h2 id="效果对比"><a href="#效果对比" class="headerlink" title="效果对比"></a>效果对比</h2><ul>
-<li>CS 架构优于 BS 架构。</li>
-<li>CS 架构中，UE4 和 Unity 效果各有特色，UE4 写实效果优于 Unity，Unity 其他效果优于 UE4。</li>
-<li>BS 架构：Unity 的 B 端效果要优于 WebGL 和 Threejs，WebGL 和 Threejs 效果基本差不多。</li>
-</ul>
-<h2 id="体量对比"><a href="#体量对比" class="headerlink" title="体量对比"></a>体量对比</h2><ul>
-<li>UE4 体量是这几个技术中最大的，相对于 Unity，UE4 的安装包 10GB 左右，同时对开发设备要求也是最高的，相同的项目等级，UE4 项目的体量要大于 Unity。</li>
-<li>BS 架构因为效果低于 CS 架构，因此体量相对较小。</li>
-</ul>
-<h2 id="开发对比"><a href="#开发对比" class="headerlink" title="开发对比"></a>开发对比</h2><ul>
-<li>BS 架构中 WebGL 和 Threejs 因为没有成熟的渲染流程，开发工作量比较大，但是 Unity 的 WebGL 是基于 Unity 引擎渲染，有成熟的渲染流程，开发工作量比较小；举个例子，在场景中增加一个相机，WebGL 和 Threejs 需要手动敲代码增加一个相机，而 Unity 只需要拖一个相机组件到场景即可。前两者使用 JS 语言，后面的 Unity 使用 C# 语言，最后发布成 WebGL。</li>
-<li>相比 WebGL 和 Threejs，Unity 开发 B 端，主要工作是场景设计以及开发部分，不需要关心模型导入等其他问题。</li>
-<li>CS 架构中，UE4 使用 C++ 语言开发，Unity 使用 C# 语言开发，UE4 的 C++ 语言也是在原 C++ 语言上增加的反射机制，因此编译比较慢；C# 语言是面向对象语言，有反射机制，因此开发过程中编译比较快。</li>
-<li>扩展性：Unity 要优于 UE4，毕竟 C# 语言是面向对象的语言，市面上 Unity 的插件是要多于 UE4 的插件。这个从腾讯选择 Unity 做自己产品就可以看出。</li>
-</ul>
-<h2 id="友好对比"><a href="#友好对比" class="headerlink" title="友好对比"></a>友好对比</h2><ul>
-<li>这里不做 B 端的阐述，相对 C 端，B 端的友好度很低。</li>
-<li>UE4 的界面给人一种比较乱的感觉，画面跳色太多；在编辑材质、模型等资源时，会重新打开一个窗口，造成多个窗口来回拖动，影响操作性。</li>
-<li>Unity 的界面友好度要优于 UE4，Unity 的所有窗口都在同一个大窗口之下，一目了然的可以看到各个窗口的内容。</li>
-</ul>
-<h2 id="渲染对比"><a href="#渲染对比" class="headerlink" title="渲染对比"></a>渲染对比</h2><ul>
-<li>因为 C 端效果要优于 B 端，因此不做 B 端阐述。</li>
-<li>Unity 是实时渲染，当修改材质时，可以实时看到场景内物体上材质的改变。</li>
-<li>但是 UE4 修改材质时，需要保存并编译后才能看到，编译过程耗费的时间也跟使用的设备配置有关。</li>
-</ul>
-<h2 id="平台对比"><a href="#平台对比" class="headerlink" title="平台对比"></a>平台对比</h2><ul>
-<li>Unity 可以发布成 B 端、C 端、移动端等</li>
-<li>UE4 可以发布成 C 端、移动端等</li>
-</ul>
-<h2 id="维护对比"><a href="#维护对比" class="headerlink" title="维护对比"></a>维护对比</h2><p>Unity 的项目维护成本要低于 UE4 的维护成本，这个维护成本是从人力、设备等多方面考虑，一个相同体量项目，UE4 技术比 Unity 技术要多 1~2 个人。</p>
-<h2 id="发布对比"><a href="#发布对比" class="headerlink" title="发布对比"></a>发布对比</h2><p>以相同项目发布成 C 端为例，UE4 耗费的时间要高于 Unity，具体是多少要看项目大小。</p>
-<h2 id="像素流技术"><a href="#像素流技术" class="headerlink" title="像素流技术"></a>像素流技术</h2><p>现在 UE4 和 Unity 都有像素流技术，像素流的原理是将服务器渲染的画面通过视频流的方式传递至客户端，客户端不做渲染工作。因为是视频流，所以对网络带宽是有要求的，当然务器成本就很高。</p>
-]]></content>
-      <categories>
-        <category>可视化</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>如何将透明度应用于CSS变量</title>
-    <url>/2024/06/04/%E5%A6%82%E4%BD%95%E5%B0%86%E9%80%8F%E6%98%8E%E5%BA%A6%E5%BA%94%E7%94%A8%E4%BA%8ECSS%E5%8F%98%E9%87%8F/</url>
-    <content><![CDATA[<p>当我们使用CSS变量开发页面主题时，难免遇到这样的场景，假设有一个主色<code>--primary-color: #2a8b92;</code>，在某些地方想使用透明度为0.5的主色、0.8的主色。。。这个时候该怎么办呢？在这之前，我只能定义多个主色变量：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">#2a8b92</span>;</span><br><span class="line">  <span class="attr">--primary-color-opacity-05</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">0.5</span>);</span><br><span class="line">  <span class="attr">--primary-color-opacity-08</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">0.8</span>);</span><br><span class="line">  <span class="attr">--primary-color-opacity-10</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样一来，需要维护的变量就太多了，好在CSS变量支持如下写法：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用时只需这样即可：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color), <span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">border-color</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color), <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但这样每次使用时都需要写rgb或rgba，略微麻烦，所以一般可以这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color-rgb</span>: <span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>;</span><br><span class="line">  <span class="attr">--primary-color-hex</span>: <span class="number">#2a8b92</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样当需要透明度时使用<code>--primary-color-rgb</code>，当不需要透明度时直接使用<code>--primary-color-hex</code></p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color-rgb), <span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">border-color</span>: <span class="built_in">var</span>(--primary-color-hex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>CSS</category>
-      </categories>
-      <tags>
-        <tag>CSS变量</tag>
       </tags>
   </entry>
   <entry>
@@ -1346,52 +1309,6 @@
       </tags>
   </entry>
   <entry>
-    <title>极空间Docker安装CentOS并开启SSH</title>
-    <url>/2024/10/12/%E6%9E%81%E7%A9%BA%E9%97%B4Docker%E5%AE%89%E8%A3%85CentOS%E5%B9%B6%E5%BC%80%E5%90%AFSSH/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>购买极空间的目的，一方面是为了方便存储、共享照片、视频、音乐，尤其是宝宝照片，换下来的旧手机、iPad，照片都没有统一的存储位置。iCloud？空间不够。百度网盘？空间方面，应该是之前参加活动，达到了1T，还可以，但下载速度实在是太恶心。而且毕竟是托管到了第三方平台，虽然百度是一家大型互联网公司，但以后谁说得准呢，想当年诺基亚也是响当当的手机厂商，不一样折戟沉沙。</p>
-<p>另一方面，利用极空间的Docker可以搭建一台专属服务器，平时搞个测试、部署个Web服务，实在是太方便了。之前尝试过在家里弄了台主机作为服务器，也购买过阿里云的服务器，但一方面不支持移动端、不方便共享，满足不了上面共享照片的需求，另一方面云服务器费用太高，最终都放弃了。</p>
-<p>虽然极空间依赖他的App，但内容是存储到自己硬盘里的，即便将来他也成为了诺基亚，理论上只要已安装的App还在，就能使用。再退一步，还可以将硬盘取出来直连接到电脑获取内容。</p>
-<h2 id="1-安装CentOS"><a href="#1-安装CentOS" class="headerlink" title="1. 安装CentOS"></a>1. 安装CentOS</h2><h3 id="1-1-下载镜像"><a href="#1-1-下载镜像" class="headerlink" title="1.1 下载镜像"></a>1.1 下载镜像</h3><p>直接在常用镜像里搜索CentOS下载即可。<br><img width="600" alt="下载镜像.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/下载镜像.png"></p>
-<h3 id="1-2-安装镜像"><a href="#1-2-安装镜像" class="headerlink" title="1.2 安装镜像"></a>1.2 安装镜像</h3><p>双击下载好的镜像，开始配置。<br>极空间的参数设置窗口分8个Tab。我们这里主要设置“基本设置”、“文件夹路径”、“端口”这三个Tab，其余页面保持默认就可以了。</p>
-<p><strong>基本设置</strong><br>由于我的极空间是8核16G的，所以这里我就不启用性能限制了。<br><img width="600" alt="基本设置.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/基本设置.png"></p>
-<p><strong>文件夹路径</strong><br>这里可以这么理解：将CentOS的<code>/data</code>目录映射到极空间的<code>/SATA0/centos</code>目录，这样在CentOS里就可以通过<code>/data</code>目录访问到极空间<code>/SATA0/centos</code>目录下的内容。<br><img width="600" alt="文件夹路径.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/文件夹路径.png"></p>
-<p><strong>端口</strong><br>其实就是做一个端口映射，将极空间的某个端口映射到CentOS的某个端口。这里需要一次性尽量设置多一些，因为后面再编辑的话，它会初始化CentOS，导致之前安装的软件都丢失，不过放到<code>/data</code>(映射到极空间目录)的内容不会丢失。<br><img width="600" alt="端口.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/端口.png"></p>
-<h2 id="2-安装Linux常备组件"><a href="#2-安装Linux常备组件" class="headerlink" title="2. 安装Linux常备组件"></a>2. 安装Linux常备组件</h2><p>首先从极空间Docker官方SSH进入系统，进行设置。进入之后是默认root账户。<br><img width="500" alt="SSH登录.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/SSH登录.png"></p>
-<p><strong>安装镜像源和系统下载工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i -e &quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot; /etc/yum.repos.d/CentOS-* </span><br><span class="line"></span><br><span class="line">yum install -y wget</span><br></pre></td></tr></table></figure>
-
-<p><strong>安装网络工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y openssh*</span><br><span class="line"></span><br><span class="line">yum install -y net-tools</span><br></pre></td></tr></table></figure>
-
-<p><strong>安装密码工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y passwd</span><br></pre></td></tr></table></figure>
-
-<p><strong>修改密码</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-开启SSH"><a href="#3-开启SSH" class="headerlink" title="3. 开启SSH"></a>3. 开启SSH</h2><p><strong>修改ssh设置</strong><br>首先对系统的ssh设置进行修改（ssh工具就是上文中安装的openssh）。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
-<img width="400" alt="打开端口22的监听.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/打开端口22的监听.png">
-
-<p><strong>使能ssh</strong><br>在正常的使能方法里，直接使用Linux的systemctl工具就可以使能。但是，该工具是需要docker系统的privilege权限的，而且需要在开启docker的时候就赋予权限。而极空间既没有开放命令行操作，也没有开放privilege权限，所以我们也就无法使用命令行在docker开启的时候赋予privilege权限了。因此，我们必须使用其他的方法进行使能。<br>请按照下面方法进行配置：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /var/run/sshd</span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N &#x27;&#x27; </span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">/usr/sbin/sshd -D &amp; </span><br></pre></td></tr></table></figure>
-<p>然后就可以开启ssh工具了。<br>如果需要确认是否已经开启，可以输入下述指令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -antup | grep sshd</span><br></pre></td></tr></table></figure>
-<p>应该会有以下输出</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      256/sshd</span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      256/sshd</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-使用SSH工具连接"><a href="#4-使用SSH工具连接" class="headerlink" title="4. 使用SSH工具连接"></a>4. 使用SSH工具连接</h2><p>现在就可以使用比如<code>Termius</code>等ssh工具进行连接了。</p>
-<h2 id="5-配置ll命令"><a href="#5-配置ll命令" class="headerlink" title="5. 配置ll命令"></a>5. 配置<code>ll</code>命令</h2><p>在CentOS中，<code>ll</code>命令是<code>ls -l</code>的别名，但是默认情况下，CentOS并没有配置<code>ll</code>命令。因此，我们需要手动配置一下。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi ~/.bashrc</span><br></pre></td></tr></table></figure>
-<p>在文件末尾添加以下内容：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">alias ll=&#x27;ls -alF&#x27;</span><br></pre></td></tr></table></figure>
-<p>然后保存并退出，使用以下命令使配置生效：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>极空间</category>
-      </categories>
-  </entry>
-  <entry>
     <title>电子表格组件调研</title>
     <url>/2024/11/27/%E7%94%B5%E5%AD%90%E8%A1%A8%E6%A0%BC%E7%BB%84%E4%BB%B6%E8%B0%83%E7%A0%94/</url>
     <content><![CDATA[<table>
@@ -1494,6 +1411,97 @@
       </tags>
   </entry>
   <entry>
+    <title>可视化技术选型</title>
+    <url>/2022/07/16/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</url>
+    <content><![CDATA[<h2 id="架构对比"><a href="#架构对比" class="headerlink" title="架构对比"></a>架构对比</h2><ul>
+<li>BS 架构：Unity、WebGL、Threejs</li>
+<li>CS 架构：Unity、UE4、Ventuz</li>
+<li>因为 Ventuz 是国外收费引擎，因此下面内容不做对比。</li>
+</ul>
+<h2 id="效果对比"><a href="#效果对比" class="headerlink" title="效果对比"></a>效果对比</h2><ul>
+<li>CS 架构优于 BS 架构。</li>
+<li>CS 架构中，UE4 和 Unity 效果各有特色，UE4 写实效果优于 Unity，Unity 其他效果优于 UE4。</li>
+<li>BS 架构：Unity 的 B 端效果要优于 WebGL 和 Threejs，WebGL 和 Threejs 效果基本差不多。</li>
+</ul>
+<h2 id="体量对比"><a href="#体量对比" class="headerlink" title="体量对比"></a>体量对比</h2><ul>
+<li>UE4 体量是这几个技术中最大的，相对于 Unity，UE4 的安装包 10GB 左右，同时对开发设备要求也是最高的，相同的项目等级，UE4 项目的体量要大于 Unity。</li>
+<li>BS 架构因为效果低于 CS 架构，因此体量相对较小。</li>
+</ul>
+<h2 id="开发对比"><a href="#开发对比" class="headerlink" title="开发对比"></a>开发对比</h2><ul>
+<li>BS 架构中 WebGL 和 Threejs 因为没有成熟的渲染流程，开发工作量比较大，但是 Unity 的 WebGL 是基于 Unity 引擎渲染，有成熟的渲染流程，开发工作量比较小；举个例子，在场景中增加一个相机，WebGL 和 Threejs 需要手动敲代码增加一个相机，而 Unity 只需要拖一个相机组件到场景即可。前两者使用 JS 语言，后面的 Unity 使用 C# 语言，最后发布成 WebGL。</li>
+<li>相比 WebGL 和 Threejs，Unity 开发 B 端，主要工作是场景设计以及开发部分，不需要关心模型导入等其他问题。</li>
+<li>CS 架构中，UE4 使用 C++ 语言开发，Unity 使用 C# 语言开发，UE4 的 C++ 语言也是在原 C++ 语言上增加的反射机制，因此编译比较慢；C# 语言是面向对象语言，有反射机制，因此开发过程中编译比较快。</li>
+<li>扩展性：Unity 要优于 UE4，毕竟 C# 语言是面向对象的语言，市面上 Unity 的插件是要多于 UE4 的插件。这个从腾讯选择 Unity 做自己产品就可以看出。</li>
+</ul>
+<h2 id="友好对比"><a href="#友好对比" class="headerlink" title="友好对比"></a>友好对比</h2><ul>
+<li>这里不做 B 端的阐述，相对 C 端，B 端的友好度很低。</li>
+<li>UE4 的界面给人一种比较乱的感觉，画面跳色太多；在编辑材质、模型等资源时，会重新打开一个窗口，造成多个窗口来回拖动，影响操作性。</li>
+<li>Unity 的界面友好度要优于 UE4，Unity 的所有窗口都在同一个大窗口之下，一目了然的可以看到各个窗口的内容。</li>
+</ul>
+<h2 id="渲染对比"><a href="#渲染对比" class="headerlink" title="渲染对比"></a>渲染对比</h2><ul>
+<li>因为 C 端效果要优于 B 端，因此不做 B 端阐述。</li>
+<li>Unity 是实时渲染，当修改材质时，可以实时看到场景内物体上材质的改变。</li>
+<li>但是 UE4 修改材质时，需要保存并编译后才能看到，编译过程耗费的时间也跟使用的设备配置有关。</li>
+</ul>
+<h2 id="平台对比"><a href="#平台对比" class="headerlink" title="平台对比"></a>平台对比</h2><ul>
+<li>Unity 可以发布成 B 端、C 端、移动端等</li>
+<li>UE4 可以发布成 C 端、移动端等</li>
+</ul>
+<h2 id="维护对比"><a href="#维护对比" class="headerlink" title="维护对比"></a>维护对比</h2><p>Unity 的项目维护成本要低于 UE4 的维护成本，这个维护成本是从人力、设备等多方面考虑，一个相同体量项目，UE4 技术比 Unity 技术要多 1~2 个人。</p>
+<h2 id="发布对比"><a href="#发布对比" class="headerlink" title="发布对比"></a>发布对比</h2><p>以相同项目发布成 C 端为例，UE4 耗费的时间要高于 Unity，具体是多少要看项目大小。</p>
+<h2 id="像素流技术"><a href="#像素流技术" class="headerlink" title="像素流技术"></a>像素流技术</h2><p>现在 UE4 和 Unity 都有像素流技术，像素流的原理是将服务器渲染的画面通过视频流的方式传递至客户端，客户端不做渲染工作。因为是视频流，所以对网络带宽是有要求的，当然务器成本就很高。</p>
+]]></content>
+      <categories>
+        <category>可视化</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>极空间Docker安装CentOS并开启SSH</title>
+    <url>/2024/10/12/%E6%9E%81%E7%A9%BA%E9%97%B4Docker%E5%AE%89%E8%A3%85CentOS%E5%B9%B6%E5%BC%80%E5%90%AFSSH/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>购买极空间的目的，一方面是为了方便存储、共享照片、视频、音乐，尤其是宝宝照片，换下来的旧手机、iPad，照片都没有统一的存储位置。iCloud？空间不够。百度网盘？空间方面，应该是之前参加活动，达到了1T，还可以，但下载速度实在是太恶心。而且毕竟是托管到了第三方平台，虽然百度是一家大型互联网公司，但以后谁说得准呢，想当年诺基亚也是响当当的手机厂商，不一样折戟沉沙。</p>
+<p>另一方面，利用极空间的Docker可以搭建一台专属服务器，平时搞个测试、部署个Web服务，实在是太方便了。之前尝试过在家里弄了台主机作为服务器，也购买过阿里云的服务器，但一方面不支持移动端、不方便共享，满足不了上面共享照片的需求，另一方面云服务器费用太高，最终都放弃了。</p>
+<p>虽然极空间依赖他的App，但内容是存储到自己硬盘里的，即便将来他也成为了诺基亚，理论上只要已安装的App还在，就能使用。再退一步，还可以将硬盘取出来直连接到电脑获取内容。</p>
+<h2 id="1-安装CentOS"><a href="#1-安装CentOS" class="headerlink" title="1. 安装CentOS"></a>1. 安装CentOS</h2><h3 id="1-1-下载镜像"><a href="#1-1-下载镜像" class="headerlink" title="1.1 下载镜像"></a>1.1 下载镜像</h3><p>直接在常用镜像里搜索CentOS下载即可。<br><img width="600" alt="下载镜像.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/下载镜像.png"></p>
+<h3 id="1-2-安装镜像"><a href="#1-2-安装镜像" class="headerlink" title="1.2 安装镜像"></a>1.2 安装镜像</h3><p>双击下载好的镜像，开始配置。<br>极空间的参数设置窗口分8个Tab。我们这里主要设置“基本设置”、“文件夹路径”、“端口”这三个Tab，其余页面保持默认就可以了。</p>
+<p><strong>基本设置</strong><br>由于我的极空间是8核16G的，所以这里我就不启用性能限制了。<br><img width="600" alt="基本设置.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/基本设置.png"></p>
+<p><strong>文件夹路径</strong><br>这里可以这么理解：将CentOS的<code>/data</code>目录映射到极空间的<code>/SATA0/centos</code>目录，这样在CentOS里就可以通过<code>/data</code>目录访问到极空间<code>/SATA0/centos</code>目录下的内容。<br><img width="600" alt="文件夹路径.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/文件夹路径.png"></p>
+<p><strong>端口</strong><br>其实就是做一个端口映射，将极空间的某个端口映射到CentOS的某个端口。这里需要一次性尽量设置多一些，因为后面再编辑的话，它会初始化CentOS，导致之前安装的软件都丢失，不过放到<code>/data</code>(映射到极空间目录)的内容不会丢失。<br><img width="600" alt="端口.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/端口.png"></p>
+<h2 id="2-安装Linux常备组件"><a href="#2-安装Linux常备组件" class="headerlink" title="2. 安装Linux常备组件"></a>2. 安装Linux常备组件</h2><p>首先从极空间Docker官方SSH进入系统，进行设置。进入之后是默认root账户。<br><img width="500" alt="SSH登录.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/SSH登录.png"></p>
+<p><strong>安装镜像源和系统下载工具</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i -e &quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot; /etc/yum.repos.d/CentOS-* </span><br><span class="line"></span><br><span class="line">yum install -y wget</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装网络工具</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y openssh*</span><br><span class="line"></span><br><span class="line">yum install -y net-tools</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装密码工具</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改密码</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-开启SSH"><a href="#3-开启SSH" class="headerlink" title="3. 开启SSH"></a>3. 开启SSH</h2><p><strong>修改ssh设置</strong><br>首先对系统的ssh设置进行修改（ssh工具就是上文中安装的openssh）。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<img width="400" alt="打开端口22的监听.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/打开端口22的监听.png">
+
+<p><strong>使能ssh</strong><br>在正常的使能方法里，直接使用Linux的systemctl工具就可以使能。但是，该工具是需要docker系统的privilege权限的，而且需要在开启docker的时候就赋予权限。而极空间既没有开放命令行操作，也没有开放privilege权限，所以我们也就无法使用命令行在docker开启的时候赋予privilege权限了。因此，我们必须使用其他的方法进行使能。<br>请按照下面方法进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /var/run/sshd</span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N &#x27;&#x27; </span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">/usr/sbin/sshd -D &amp; </span><br></pre></td></tr></table></figure>
+<p>然后就可以开启ssh工具了。<br>如果需要确认是否已经开启，可以输入下述指令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -antup | grep sshd</span><br></pre></td></tr></table></figure>
+<p>应该会有以下输出</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      256/sshd</span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      256/sshd</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-使用SSH工具连接"><a href="#4-使用SSH工具连接" class="headerlink" title="4. 使用SSH工具连接"></a>4. 使用SSH工具连接</h2><p>现在就可以使用比如<code>Termius</code>等ssh工具进行连接了。</p>
+<h2 id="5-配置ll命令"><a href="#5-配置ll命令" class="headerlink" title="5. 配置ll命令"></a>5. 配置<code>ll</code>命令</h2><p>在CentOS中，<code>ll</code>命令是<code>ls -l</code>的别名，但是默认情况下，CentOS并没有配置<code>ll</code>命令。因此，我们需要手动配置一下。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>在文件末尾添加以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">alias ll=&#x27;ls -alF&#x27;</span><br></pre></td></tr></table></figure>
+<p>然后保存并退出，使用以下命令使配置生效：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>极空间</category>
+      </categories>
+  </entry>
+  <entry>
     <title>聚类分析使用场景</title>
     <url>/2023/07/12/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
     <content><![CDATA[<h3 id="一、数据集"><a href="#一、数据集" class="headerlink" title="一、数据集"></a>一、数据集</h3><ol>
@@ -1546,6 +1554,26 @@
       </categories>
       <tags>
         <tag>图床</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何将透明度应用于CSS变量</title>
+    <url>/2024/06/04/%E5%A6%82%E4%BD%95%E5%B0%86%E9%80%8F%E6%98%8E%E5%BA%A6%E5%BA%94%E7%94%A8%E4%BA%8ECSS%E5%8F%98%E9%87%8F/</url>
+    <content><![CDATA[<p>当我们使用CSS变量开发页面主题时，难免遇到这样的场景，假设有一个主色<code>--primary-color: #2a8b92;</code>，在某些地方想使用透明度为0.5的主色、0.8的主色。。。这个时候该怎么办呢？在这之前，我只能定义多个主色变量：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">#2a8b92</span>;</span><br><span class="line">  <span class="attr">--primary-color-opacity-05</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">0.5</span>);</span><br><span class="line">  <span class="attr">--primary-color-opacity-08</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">0.8</span>);</span><br><span class="line">  <span class="attr">--primary-color-opacity-10</span>: <span class="built_in">rgba</span>(<span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，需要维护的变量就太多了，好在CSS变量支持如下写法：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用时只需这样即可：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color), <span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">border-color</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color), <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但这样每次使用时都需要写rgb或rgba，略微麻烦，所以一般可以这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color-rgb</span>: <span class="number">42</span>, <span class="number">139</span>, <span class="number">146</span>;</span><br><span class="line">  <span class="attr">--primary-color-hex</span>: <span class="number">#2a8b92</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样当需要透明度时使用<code>--primary-color-rgb</code>，当不需要透明度时直接使用<code>--primary-color-hex</code></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="built_in">var</span>(--primary-color-rgb), <span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">border-color</span>: <span class="built_in">var</span>(--primary-color-hex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>CSS</category>
+      </categories>
+      <tags>
+        <tag>CSS变量</tag>
       </tags>
   </entry>
 </search>
