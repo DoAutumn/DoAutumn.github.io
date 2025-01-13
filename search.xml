@@ -31,6 +31,61 @@
       </categories>
   </entry>
   <entry>
+    <title>CKEditor5学习开发之路</title>
+    <url>/2023/01/11/CKEditor5%E5%AD%A6%E4%B9%A0%E5%BC%80%E5%8F%91%E4%B9%8B%E8%B7%AF/</url>
+    <content><![CDATA[<blockquote>
+<p>在开发富文本编辑器的过程中，遇到了很多问题，这里做下记录与分享。</p>
+</blockquote>
+<blockquote>
+<p>说明：本文中涉及的代码较少，也并非单纯的开发步骤，而是整理的一些思路和问题，如果你是想一步一参考的开发一个Demo，本文并不适合你。</p>
+</blockquote>
+<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>公司的一款产品中要加入报告功能，简单来讲，就是通过Web浏览器定义word模板、定时任务，服务端根据模板、任务定时生成周报、月报的功能。对于服务端的定时任务、生成周报月报的功能实现，本文不做阐述。本文只介绍Web端的word模板定义的实现思路及遇到的一些问题，对于该功能，除了富文本编辑器基本功能之外，还需支持插入占位符（用于服务端生成word时替换为实际内容）、图表。</p>
+<h2 id="二、技术选型"><a href="#二、技术选型" class="headerlink" title="二、技术选型"></a>二、技术选型</h2><p>接到需求之后，首先想到的一些成熟的产品，像<a href="https://note.youdao.com/">有道云笔记</a>、<a href="https://docs.qq.com/">腾讯文档</a>、<a href="https://shimo.im/">石墨文档</a>、<a href="https://www.yuque.com/">语雀</a>、<a href="https://www.wolai.com/">我来</a>（没使用过，形式好像不太一样）等都有类似功能，但具体是如何实现的呢，不得而知。由于本人之前使用过有道云，所以就想查查有没有相关文章、代码可以参考，没想到还真有。</p>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000039046174?utm_source=sf-similar-article">有道云笔记新版编辑器架构设计（上）</a></li>
+<li><a href="https://segmentfault.com/a/1190000039104198?utm_source=sf-similar-article">有道云笔记新版编辑器架构设计（下）</a></li>
+</ul>
+<p>这是有道技术团队分享的架构设计，具有极高的参考价值。看完这两篇文章，本人甚至都有自己开发实现一把的冲动了。奈何考虑到只有我一个人在做这个事情，而且文章虽好，但没有技术细节，实现难度较大，最终只能作罢，只好沿着富文本编辑器的思路继续调研。</p>
+<p>网上关于富文本编辑器的推荐着实不少，<a href="https://blog.csdn.net/growb/article/details/124446195">推荐几款好用的富文本编辑器</a>、<a href="https://jishuin.proginn.com/p/763bfbd75b52">推荐10款常用的富文本编辑器</a>，经过综合对比，最终选定了<a href="https://ckeditor.com/">CKEditor</a>。之所以选CKEditor，一是因为它适配了Angular框架，提供了依赖包<code>@ckeditor/ckeditor5-angular</code>（公司技术栈就是Angular），二是支持从 Word、Excel 和 Google Docs 粘贴。</p>
+<h2 id="三、CKEditor的使用与踩坑"><a href="#三、CKEditor的使用与踩坑" class="headerlink" title="三、CKEditor的使用与踩坑"></a>三、CKEditor的使用与踩坑</h2><p>对于CKEditor的介绍，这里就不再赘述了，官方文档介绍的更为详细，但目前还没找到中文文档。</p>
+<blockquote>
+<p>不过需要说明的是，能够提前阅读到上述有道技术团队分享的架构设计，也算是比较幸运的，这对于理解CKEditor的架构设计及后面的插件开发，是相当有帮助的。</p>
+</blockquote>
+<h3 id="1、Document-Editor"><a href="#1、Document-Editor" class="headerlink" title="1、Document Editor"></a>1、Document Editor</h3><p>CKEditor支持在5种模式下使用：Classic、Balloon、Balloon Block、Inline、Document，而Document恰恰是我们需要的。按照其<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/frameworks/angular.html#using-the-document-editor-build">文档</a>介绍，很容易就能构建出一个Demo。</p>
+<h3 id="2、添加Page-break插件"><a href="#2、添加Page-break插件" class="headerlink" title="2、添加Page break插件"></a>2、添加<a href="https://ckeditor.com/docs/ckeditor5/latest/features/page-break.html">Page break</a>插件</h3><p>由于Document模式默认是不带分页功能的，而<a href="https://ckeditor.com/docs/ckeditor5/latest/features/pagination/pagination.html">Pagination</a>又是收费插件，我们只能退而求其次使用Page break。而当我们按照文档尝试安装并引入该插件时，程序报错了。</p>
+<p><code>core.js:7744 ERROR Error: Uncaught (in promise): CKEditorError: ckeditor-duplicated-modules</code></p>
+<p>对于这个错误，官网也有详细<a href="https://ckeditor.com/docs/ckeditor5/latest/support/error-codes.html#error-ckeditor-duplicated-modules">说明</a>，大概意思就是不能在已经构建的包<code>@ckeditor/ckeditor5-build-decoupled-document</code>中再导入新的插件。</p>
+<p>如果只是使用CKEditor提供的现有插件，则可以使用<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#creating-custom-builds-with-online-builder">Online Builder</a>来解决上述问题。但正如前文提到的，我们的需求还包括支持插入占位符、图表，因此我们还需继续研究CKEditor如何扩展一个新的插件。</p>
+<h3 id="3、从源代码构建编辑器"><a href="#3、从源代码构建编辑器" class="headerlink" title="3、从源代码构建编辑器"></a>3、<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#building-the-editor-from-source">从源代码构建编辑器</a></h3><p>正如上文提到，当我们想要扩展一个新插件时，就不能使用CKEditor提供的已经构建好的包了<code>[CKEditor提供了5种已构建好的包，对应上述提到的5种使用模式]</code>，而是需要基于源码进行开发构建。可以按照其<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#building-the-editor-from-source">文档</a>一步步搭建开发环境、开发、构建，而另一种相对比较简单的方式则是直接下载<a href="https://github.com/ckeditor/ckeditor5">源码</a>，进入packages&#x2F;ckeditor5-build-decoupled-document目录，直接安装依赖、开发、构建。</p>
+<p>其实我一开始的想法是，在一个Angular工程中安装<code>@ckeditor/ckeditor5-angular</code>，然后开发新插件，最后将这个Angular工程打包成一个依赖包提供给产线各部门使用（我们部门的职责之一就是为各部门提供开发套件）。但是在打包代码时程序报错了，具体什么错误记不清了，由于时间关系没有继续研究。<br><em>TODO: 后面有时间了还得再回来看看。</em></p>
+<h2 id="四、插件开发"><a href="#四、插件开发" class="headerlink" title="四、插件开发"></a>四、插件开发</h2><p>好了，准备工作已完成，下面可以进入代码开发阶段了。关于插件开发的入门，可参考<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/plugins/creating-simple-plugin-timestamp.html">这里</a>。</p>
+<h3 id="1、图片上传"><a href="#1、图片上传" class="headerlink" title="1、图片上传"></a>1、图片上传</h3><p>我们要开发的第一个插件是图片上传插件，确切的说是扩展一个自定义的图片上传适配器。CKEditor默认提供了图片插入功能，但图片并没有提交至服务端，这部分逻辑需要自行实现，按照<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html">文档</a>一步步开发即可，没有什么需要特别注意的。</p>
+<h3 id="2、占位符"><a href="#2、占位符" class="headerlink" title="2、占位符"></a>2、占位符</h3><p>占位符插件也比较简单，直接基于文档中的一个<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/plugins/simple-plugin/abbreviation-plugin-level-1.html">实例</a>改造即可。</p>
+<h3 id="3、插入图表"><a href="#3、插入图表" class="headerlink" title="3、插入图表"></a>3、插入图表</h3><p>前两个插件的开发，基本上只要是理解了CKEditor的架构设计，并且按照文档的步骤，一般是不会有太多问题的。但是对于插入图表的功能，完全找不到参考，无奈，只能一边梳理思路一边研究官方文档了。</p>
+<ul>
+<li><p>思考一<br>对于图表，我们测试使用的是ECharts。我们知道如果想要实例化一个图表，也即调用它的初始化方法<code>echarts.init(dom?: HTMLDivElement|HTMLCanvasElement)</code>，需要一个Dom元素作为参数，那么我们需要研究的就是在插件中如何能够获取到新创建的Dom了。<br>通过文档中的 <a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/tutorials/using-react-in-a-widget.html">Using a React component in a block widget</a> 这个教程，我们发现其在渲染 React component 时，就是获取到插件中新创建的Dom进而渲染组件的。<br>那么这个问题便迎刃而解了。</p>
+<blockquote>
+<p>通过这个问题，需要再次告诫自己，对于这种比较成熟的产品、开发套件、开源库等，一手文档一定是其官方文档，哪怕是英文的，也要仔细研读，不要图省事去网上搜罗别人的博客、技术分享。<br>刚开始的时候，我是各种搜、各种查，但始终没有找到如何获取新创建的Dom的方案，最后还是通过官方文档找到了答案。</p>
+</blockquote>
+</li>
+<li><p>思考二<br>图表插入之后，如何确定当前选中的是图表元素，进而进行后续的业务操作？<br>相关 API 主要涉及 setCustomProperty、getCustomProperty、getSelectedElement、isWidget，具体含义及用法还是查阅<a href="https://ckeditor.com/docs/ckeditor5/latest/api/index.html">官方文档</a>吧。</p>
+</li>
+<li><p>思考三<br>图表插入之后，如何调整图表尺寸？<br>开始以为这个问题应该很好解决，因为图片在插入之后，是能够直接拖拽调整大小的，我们只需参考图片插件扩展一个图表 resize 插件即可。但当我们查看图片插件源码时，发现代码量较大，没学习到的 API 也较多，遂暂时放弃了拖拽调整图表大小的想法。<br>那能否通过设定固定尺寸调整图表大小呢？答案是肯定的。这里主要是参考了 <a href="https://github.com/eMAGTechLabs/ckeditor5-classic-image-resize">@emagtechlabs&#x2F;ckeditor5-classic-image-resize</a> 的代码实现。</p>
+</li>
+<li><p>思考四<br>实例化多个图表之后，如何区分？<br>这里主要是在定义图表插件的 schema 时带入一个 Id 即可，将来不论是图表的数据填充还是保存模板到服务端，都将通过 Id 来标识唯一的图表实例。</p>
+</li>
+</ul>
+<h2 id="五、源码及Demo"><a href="#五、源码及Demo" class="headerlink" title="五、源码及Demo"></a>五、源码及Demo</h2><p><a href="https://github.com/DoAutumn/CKEditor5">https://github.com/DoAutumn/CKEditor5</a><br><a href="https://doautumn.github.io/CKEditor5/">https://doautumn.github.io/CKEditor5/</a></p>
+]]></content>
+      <categories>
+        <category>富文本编辑器</category>
+      </categories>
+      <tags>
+        <tag>CKEditor5</tag>
+        <tag>富文本编辑器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CSS 等宽字体</title>
     <url>/2024/09/12/CSS_%E7%AD%89%E5%AE%BD%E5%AD%97%E4%BD%93/</url>
     <content><![CDATA[<p>在本文中，我们将介绍CSS中的字体族属性<code>font-family: monospace</code>。我们将探讨何时使用等宽字体，以及如何在CSS中实现等宽字体的效果。</p>
@@ -118,13 +173,15 @@
 <blockquote>
 <p><strong>2024-10-29更新</strong><br>关于步骤5、6的特殊说明：</p>
 <ul>
-<li>虽然全局安装了<code>lerna</code>，但也不能直接在终端执行上述命令，会报如下错误：<br><code>lerna ERR! EUNCOMMIT Working tree has uncommitted changes, please commit or remove the following changes before continuing:</code><br><em>原因是lerna会更新package.json中的版本号和CHANGELOG.md文件，但是坑爹啊有木有，明明是你的机制改动了我本地文件，又说我本地有残留文件，搞不懂为什么会这样</em></li>
-<li>需要将上述命令放到package.json的scripts中，如下：<br>“scripts”: {<br>“version”: “lerna version –conventional-commits”,<br>“publish”: “lerna publish from-git –yes”,<br>},</li>
+<li>虽然全局安装了<code>lerna</code>，但也不能直接在终端执行上述命令，会报如下错误：<figure class="highlight shell"><table><tbody><tr><td class="code" style="width: 884.172px;"><pre style="width: 884.172px;"><span class="line">lerna ERR! EUNCOMMIT Working tree has uncommitted changes, please commit or remove the following changes before continuing:</span></pre></td></tr></tbody></table></figure>
+<span style="font-size: 14px; color: #999999; font-style: italic;">原因是lerna会更新package.json中的版本号和CHANGELOG.md文件，但是坑爹啊有木有，明明是你的机制改动了我本地文件，又说我本地有残留文件，搞不懂为什么会这样</span></li>
+<li>需要将上述命令放到package.json的scripts中，如下：<figure class="highlight shell"><table><tbody><tr><td class="code" style="width: 884.172px;"><pre style="width: 884.172px;"><span class="line">"scripts": {</span><br /><span class="line">&nbsp;&nbsp;"version": "lerna version --conventional-commits",</span><br /><span class="line">&nbsp;&nbsp;"publish": "lerna publish from-git --yes",</span><br /><span class="line">},</span></pre></td></tr></tbody></table></figure></li>
 <li>然后通过<code>npm run version</code>、<code>npm run publish</code>执行，就不会报错了</li>
 </ul>
 </blockquote>
 <h3 id="7、安装依赖"><a href="#7、安装依赖" class="headerlink" title="7、安装依赖"></a>7、安装依赖</h3><p><del>如果只想给某个子包安装依赖 或者 子包之间有依赖关系，可通过如下命令实现：</del></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">npm install &lt;dependency&gt; -w &lt;package&gt;</span></span><br><span class="line">// dependency可以是子包名称，也可以是开源依赖</span><br><span class="line">// package为目标子包名称，是子包的package.json中的name值</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tbody><tr><td class="code" style="width: 884.172px;"><pre style="width: 884.172px;"><span class="line"><del>$ npm install [dependency] -w [package]</del></span><br /><span class="line"><del>// dependency可以是子包名称，也可以是开源依赖</del></span><br /><span class="line"><del>// package为目标子包名称，是子包的package.json中的name值</del></span></pre></td></tr></tbody></table></figure>
+
 <blockquote>
 <p><strong>2024-08-11更新</strong><br>关于步骤7的特殊说明：<br>Lerna@8版本，已经不需要像步骤7那样执行命令了，正常使用<code>npm install\uninstall</code>即可，当安装的是自己的子包时，也无需添加任何额外的参数，Lerna会自动帮我们处理，并且在<code>node_modules</code>目录下，子包的目录会通过软链接的形式指向实际的代码目录，就像这样<br><img width="300" alt="软链接.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Vue3入门/软链接.png"></p>
 </blockquote>
@@ -158,61 +215,6 @@
       <categories>
         <category>Mac</category>
       </categories>
-  </entry>
-  <entry>
-    <title>CKEditor5学习开发之路</title>
-    <url>/2023/01/11/CKEditor5%E5%AD%A6%E4%B9%A0%E5%BC%80%E5%8F%91%E4%B9%8B%E8%B7%AF/</url>
-    <content><![CDATA[<blockquote>
-<p>在开发富文本编辑器的过程中，遇到了很多问题，这里做下记录与分享。</p>
-</blockquote>
-<blockquote>
-<p>说明：本文中涉及的代码较少，也并非单纯的开发步骤，而是整理的一些思路和问题，如果你是想一步一参考的开发一个Demo，本文并不适合你。</p>
-</blockquote>
-<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>公司的一款产品中要加入报告功能，简单来讲，就是通过Web浏览器定义word模板、定时任务，服务端根据模板、任务定时生成周报、月报的功能。对于服务端的定时任务、生成周报月报的功能实现，本文不做阐述。本文只介绍Web端的word模板定义的实现思路及遇到的一些问题，对于该功能，除了富文本编辑器基本功能之外，还需支持插入占位符（用于服务端生成word时替换为实际内容）、图表。</p>
-<h2 id="二、技术选型"><a href="#二、技术选型" class="headerlink" title="二、技术选型"></a>二、技术选型</h2><p>接到需求之后，首先想到的一些成熟的产品，像<a href="https://note.youdao.com/">有道云笔记</a>、<a href="https://docs.qq.com/">腾讯文档</a>、<a href="https://shimo.im/">石墨文档</a>、<a href="https://www.yuque.com/">语雀</a>、<a href="https://www.wolai.com/">我来</a>（没使用过，形式好像不太一样）等都有类似功能，但具体是如何实现的呢，不得而知。由于本人之前使用过有道云，所以就想查查有没有相关文章、代码可以参考，没想到还真有。</p>
-<ul>
-<li><a href="https://segmentfault.com/a/1190000039046174?utm_source=sf-similar-article">有道云笔记新版编辑器架构设计（上）</a></li>
-<li><a href="https://segmentfault.com/a/1190000039104198?utm_source=sf-similar-article">有道云笔记新版编辑器架构设计（下）</a></li>
-</ul>
-<p>这是有道技术团队分享的架构设计，具有极高的参考价值。看完这两篇文章，本人甚至都有自己开发实现一把的冲动了。奈何考虑到只有我一个人在做这个事情，而且文章虽好，但没有技术细节，实现难度较大，最终只能作罢，只好沿着富文本编辑器的思路继续调研。</p>
-<p>网上关于富文本编辑器的推荐着实不少，<a href="https://blog.csdn.net/growb/article/details/124446195">推荐几款好用的富文本编辑器</a>、<a href="https://jishuin.proginn.com/p/763bfbd75b52">推荐10款常用的富文本编辑器</a>，经过综合对比，最终选定了<a href="https://ckeditor.com/">CKEditor</a>。之所以选CKEditor，一是因为它适配了Angular框架，提供了依赖包<code>@ckeditor/ckeditor5-angular</code>（公司技术栈就是Angular），二是支持从 Word、Excel 和 Google Docs 粘贴。</p>
-<h2 id="三、CKEditor的使用与踩坑"><a href="#三、CKEditor的使用与踩坑" class="headerlink" title="三、CKEditor的使用与踩坑"></a>三、CKEditor的使用与踩坑</h2><p>对于CKEditor的介绍，这里就不再赘述了，官方文档介绍的更为详细，但目前还没找到中文文档。</p>
-<blockquote>
-<p>不过需要说明的是，能够提前阅读到上述有道技术团队分享的架构设计，也算是比较幸运的，这对于理解CKEditor的架构设计及后面的插件开发，是相当有帮助的。</p>
-</blockquote>
-<h3 id="1、Document-Editor"><a href="#1、Document-Editor" class="headerlink" title="1、Document Editor"></a>1、Document Editor</h3><p>CKEditor支持在5种模式下使用：Classic、Balloon、Balloon Block、Inline、Document，而Document恰恰是我们需要的。按照其<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/frameworks/angular.html#using-the-document-editor-build">文档</a>介绍，很容易就能构建出一个Demo。</p>
-<h3 id="2、添加Page-break插件"><a href="#2、添加Page-break插件" class="headerlink" title="2、添加Page break插件"></a>2、添加<a href="https://ckeditor.com/docs/ckeditor5/latest/features/page-break.html">Page break</a>插件</h3><p>由于Document模式默认是不带分页功能的，而<a href="https://ckeditor.com/docs/ckeditor5/latest/features/pagination/pagination.html">Pagination</a>又是收费插件，我们只能退而求其次使用Page break。而当我们按照文档尝试安装并引入该插件时，程序报错了。</p>
-<p><code>core.js:7744 ERROR Error: Uncaught (in promise): CKEditorError: ckeditor-duplicated-modules</code></p>
-<p>对于这个错误，官网也有详细<a href="https://ckeditor.com/docs/ckeditor5/latest/support/error-codes.html#error-ckeditor-duplicated-modules">说明</a>，大概意思就是不能在已经构建的包<code>@ckeditor/ckeditor5-build-decoupled-document</code>中再导入新的插件。</p>
-<p>如果只是使用CKEditor提供的现有插件，则可以使用<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#creating-custom-builds-with-online-builder">Online Builder</a>来解决上述问题。但正如前文提到的，我们的需求还包括支持插入占位符、图表，因此我们还需继续研究CKEditor如何扩展一个新的插件。</p>
-<h3 id="3、从源代码构建编辑器"><a href="#3、从源代码构建编辑器" class="headerlink" title="3、从源代码构建编辑器"></a>3、<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#building-the-editor-from-source">从源代码构建编辑器</a></h3><p>正如上文提到，当我们想要扩展一个新插件时，就不能使用CKEditor提供的已经构建好的包了<code>[CKEditor提供了5种已构建好的包，对应上述提到的5种使用模式]</code>，而是需要基于源码进行开发构建。可以按照其<a href="https://ckeditor.com/docs/ckeditor5/latest/installation/getting-started/quick-start-other.html#building-the-editor-from-source">文档</a>一步步搭建开发环境、开发、构建，而另一种相对比较简单的方式则是直接下载<a href="https://github.com/ckeditor/ckeditor5">源码</a>，进入packages&#x2F;ckeditor5-build-decoupled-document目录，直接安装依赖、开发、构建。</p>
-<p>其实我一开始的想法是，在一个Angular工程中安装<code>@ckeditor/ckeditor5-angular</code>，然后开发新插件，最后将这个Angular工程打包成一个依赖包提供给产线各部门使用（我们部门的职责之一就是为各部门提供开发套件）。但是在打包代码时程序报错了，具体什么错误记不清了，由于时间关系没有继续研究。<br><em>TODO: 后面有时间了还得再回来看看。</em></p>
-<h2 id="四、插件开发"><a href="#四、插件开发" class="headerlink" title="四、插件开发"></a>四、插件开发</h2><p>好了，准备工作已完成，下面可以进入代码开发阶段了。关于插件开发的入门，可参考<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/plugins/creating-simple-plugin-timestamp.html">这里</a>。</p>
-<h3 id="1、图片上传"><a href="#1、图片上传" class="headerlink" title="1、图片上传"></a>1、图片上传</h3><p>我们要开发的第一个插件是图片上传插件，确切的说是扩展一个自定义的图片上传适配器。CKEditor默认提供了图片插入功能，但图片并没有提交至服务端，这部分逻辑需要自行实现，按照<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html">文档</a>一步步开发即可，没有什么需要特别注意的。</p>
-<h3 id="2、占位符"><a href="#2、占位符" class="headerlink" title="2、占位符"></a>2、占位符</h3><p>占位符插件也比较简单，直接基于文档中的一个<a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/plugins/simple-plugin/abbreviation-plugin-level-1.html">实例</a>改造即可。</p>
-<h3 id="3、插入图表"><a href="#3、插入图表" class="headerlink" title="3、插入图表"></a>3、插入图表</h3><p>前两个插件的开发，基本上只要是理解了CKEditor的架构设计，并且按照文档的步骤，一般是不会有太多问题的。但是对于插入图表的功能，完全找不到参考，无奈，只能一边梳理思路一边研究官方文档了。</p>
-<ul>
-<li><p>思考一<br>对于图表，我们测试使用的是ECharts。我们知道如果想要实例化一个图表，也即调用它的初始化方法<code>echarts.init(dom?: HTMLDivElement|HTMLCanvasElement)</code>，需要一个Dom元素作为参数，那么我们需要研究的就是在插件中如何能够获取到新创建的Dom了。<br>通过文档中的 <a href="https://ckeditor.com/docs/ckeditor5/latest/framework/guides/tutorials/using-react-in-a-widget.html">Using a React component in a block widget</a> 这个教程，我们发现其在渲染 React component 时，就是获取到插件中新创建的Dom进而渲染组件的。<br>那么这个问题便迎刃而解了。</p>
-<blockquote>
-<p>通过这个问题，需要再次告诫自己，对于这种比较成熟的产品、开发套件、开源库等，一手文档一定是其官方文档，哪怕是英文的，也要仔细研读，不要图省事去网上搜罗别人的博客、技术分享。<br>刚开始的时候，我是各种搜、各种查，但始终没有找到如何获取新创建的Dom的方案，最后还是通过官方文档找到了答案。</p>
-</blockquote>
-</li>
-<li><p>思考二<br>图表插入之后，如何确定当前选中的是图表元素，进而进行后续的业务操作？<br>相关 API 主要涉及 setCustomProperty、getCustomProperty、getSelectedElement、isWidget，具体含义及用法还是查阅<a href="https://ckeditor.com/docs/ckeditor5/latest/api/index.html">官方文档</a>吧。</p>
-</li>
-<li><p>思考三<br>图表插入之后，如何调整图表尺寸？<br>开始以为这个问题应该很好解决，因为图片在插入之后，是能够直接拖拽调整大小的，我们只需参考图片插件扩展一个图表 resize 插件即可。但当我们查看图片插件源码时，发现代码量较大，没学习到的 API 也较多，遂暂时放弃了拖拽调整图表大小的想法。<br>那能否通过设定固定尺寸调整图表大小呢？答案是肯定的。这里主要是参考了 <a href="https://github.com/eMAGTechLabs/ckeditor5-classic-image-resize">@emagtechlabs&#x2F;ckeditor5-classic-image-resize</a> 的代码实现。</p>
-</li>
-<li><p>思考四<br>实例化多个图表之后，如何区分？<br>这里主要是在定义图表插件的 schema 时带入一个 Id 即可，将来不论是图表的数据填充还是保存模板到服务端，都将通过 Id 来标识唯一的图表实例。</p>
-</li>
-</ul>
-<h2 id="五、源码及Demo"><a href="#五、源码及Demo" class="headerlink" title="五、源码及Demo"></a>五、源码及Demo</h2><p><a href="https://github.com/DoAutumn/CKEditor5">https://github.com/DoAutumn/CKEditor5</a><br><a href="https://doautumn.github.io/CKEditor5/">https://doautumn.github.io/CKEditor5/</a></p>
-]]></content>
-      <categories>
-        <category>富文本编辑器</category>
-      </categories>
-      <tags>
-        <tag>CKEditor5</tag>
-        <tag>富文本编辑器</tag>
-      </tags>
   </entry>
   <entry>
     <title>Mac_Chrome跨域</title>
@@ -348,6 +350,33 @@
       </categories>
   </entry>
   <entry>
+    <title>Obsidian插件开发</title>
+    <url>/2024/10/10/Obsidian%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>之所以要开发 Obsidian 插件，是因为之前整理了<a href="/2024/09/27/%E9%80%9A%E8%BF%87Gitee%E7%9A%84OpenAPI%E5%AE%9E%E7%8E%B0%E5%9B%BE%E5%BA%8A/">通过Gitee的OpenAPI实现图床</a>，想着将 Obsidian 的图片也上传到图床，然后生成链接，这样就可以在 Obsidian 中直接使用图片链接了。</p>
+<p>但是后来想到，Obsidian 还是可以插入文件的，如果将文件也上传到图床固然可行，但是文件的预览就不太方便了。因为 Obsidian 中仅是插入了文件链接，点击之后实际是通过浏览器打开的，像 .docx 等文件浏览器是不支持预览的，所以就直接下载下来了，这种体验并不友好。</p>
+<p>最终想了想，Obsidian 的笔记其实还是同步到 iCloud 中的（自己配置的），所以图片、文件也都保持这种方式吧。</p>
+<p>但是插件已经开发出来了，这里就记录一下开发过程。</p>
+<h2 id="开发文档"><a href="#开发文档" class="headerlink" title="开发文档"></a>开发文档</h2><p>开发文档可以参考<a href="https://luhaifeng666.github.io/obsidian-plugin-docs-zh/zh2.0/getting-started/create-your-first-plugin.html">Obsidian 插件开发文档</a>，步骤还是很详细的，示例工程都有了。</p>
+<h2 id="上传文件到-Gitee"><a href="#上传文件到-Gitee" class="headerlink" title="上传文件到 Gitee"></a>上传文件到 Gitee</h2><p>我的这个插件想要实现的功能是，将粘贴或拖拽到 Obsidian 中的图片、文件自动上传到 Gitee，并生成链接，然后直接插入到笔记中。</p>
+<h3 id="插件配置"><a href="#插件配置" class="headerlink" title="插件配置"></a>插件配置</h3><p>首先，需要配置 Gitee 的相关信息，包括用户名、仓库地址、分支名、token 等。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">DEFAULT_SETTINGS</span>: <span class="title class_">MyPluginSettings</span> = &#123;</span><br><span class="line">  <span class="attr">repo</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">  <span class="attr">branch</span>: <span class="string">&#x27;master&#x27;</span>,</span><br><span class="line">  <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">  <span class="attr">token</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><p>然后，需要监听 Obsidian 中的粘贴和拖拽事件，当有图片或文件被粘贴或拖拽到 Obsidian 中时，触发上传操作。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">onload</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadSettings</span>();</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">registerEvent</span>(</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">app</span>.<span class="property">workspace</span>.<span class="title function_">on</span>(<span class="string">&#x27;editor-paste&#x27;</span>, <span class="function">(<span class="params">event, editor, content</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">uploadFiles</span>(event.<span class="property">clipboardData</span>?.<span class="property">files</span>, event, editor);</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">registerEvent</span>(</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">app</span>.<span class="property">workspace</span>.<span class="title function_">on</span>(<span class="string">&#x27;editor-drop&#x27;</span>, <span class="function">(<span class="params">event, editor, content</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">uploadFiles</span>(event.<span class="property">dataTransfer</span>?.<span class="property">files</span>, event, editor);</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">uploadFiles</span>(<span class="params">files: FileList | <span class="literal">undefined</span>, event: ClipboardEvent | DragEvent, editor: Editor</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!files?.<span class="property">length</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  event.<span class="title function_">preventDefault</span>();</span><br><span class="line">  event.<span class="title function_">stopPropagation</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">settings</span>.<span class="property">subPathable</span>) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">SampleModal</span>(<span class="variable language_">this</span>.<span class="property">app</span>, files, editor, <span class="variable language_">this</span>.<span class="property">settings</span>).<span class="title function_">open</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_">uploadToGitee</span>(files, <span class="variable language_">this</span>.<span class="property">settings</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      editor.<span class="title function_">replaceSelection</span>(res.<span class="title function_">filter</span>(<span class="function"><span class="params">x</span> =&gt;</span> x).<span class="title function_">join</span>(<span class="string">&#x27;\n&#x27;</span>));</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h3><p>上传图片的功能比较简单，直接使用 Gitee 提供的 API 即可。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">uploadToGitee</span>(<span class="params">fileList: FileList, settings: MyPluginSettings, filePath: string = <span class="string">&#x27;&#x27;</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> tooLargeFiles = <span class="title class_">Array</span>.<span class="title function_">from</span>(fileList).<span class="title function_">filter</span>(<span class="function"><span class="params">file</span> =&gt;</span> file.<span class="property">size</span> &gt; <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (tooLargeFiles.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`文件大小不能超过10MB，<span class="subst">$&#123;tooLargeFiles.map(file =&gt; file.name).join(<span class="string">&#x27;、&#x27;</span>)&#125;</span>将会被丢弃`</span>, <span class="number">5000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">all</span>(<span class="title class_">Array</span>.<span class="title function_">from</span>(fileList).<span class="title function_">filter</span>(<span class="function"><span class="params">file</span> =&gt;</span> file.<span class="property">size</span> &lt;= <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>).<span class="title function_">map</span>(<span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> reader = <span class="keyword">new</span> <span class="title class_">FileReader</span>();</span><br><span class="line">      reader.<span class="property">onload</span> = <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        axios.<span class="title function_">post</span>(<span class="string">`https://gitee.com/api/v5/repos/<span class="subst">$&#123;settings.repo&#125;</span>/contents/<span class="subst">$&#123;settings.path&#125;</span>/<span class="subst">$&#123;filePath&#125;</span>/<span class="subst">$&#123;file.name&#125;</span>`</span>, &#123;</span><br><span class="line">          <span class="attr">access_token</span>: settings.<span class="property">token</span>,</span><br><span class="line">          <span class="attr">content</span>: (reader.<span class="property">result</span> <span class="keyword">as</span> string).<span class="title function_">replace</span>(<span class="string">`data:<span class="subst">$&#123;file.type&#125;</span>;base64,`</span>, <span class="string">&#x27;&#x27;</span>),</span><br><span class="line">          <span class="attr">message</span>: <span class="string">&#x27;upload image&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(file.<span class="property">type</span>.<span class="title function_">includes</span>(<span class="string">&#x27;image&#x27;</span>) ? <span class="string">`![<span class="subst">$&#123;file.name&#125;</span>](<span class="subst">$&#123;res.data.content.download_url&#125;</span>)`</span> : res.<span class="property">data</span>.<span class="property">content</span>.<span class="property">download_url</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">          .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`上传文件<span class="subst">$&#123;file.name&#125;</span>失败，失败原因：<span class="subst">$&#123;err.response.data.message&#125;</span>`</span>, <span class="number">5000</span>);</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;;</span><br><span class="line">      reader.<span class="property">onerror</span> = <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`文件读取<span class="subst">$&#123;file.name&#125;</span>失败`</span>, <span class="number">5000</span>);</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">      &#125;;</span><br><span class="line">      reader.<span class="title function_">readAsDataURL</span>(file);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码地址"><a href="#代码地址" class="headerlink" title="代码地址"></a>代码地址</h3><p><a href="https://github.com/DoAutumn/img-plugin-obsidian">https://github.com/DoAutumn/img-plugin-obsidian</a></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>Obsidian</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Puppeteer学习与使用</title>
     <url>/2023/09/08/Puppeteer%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<blockquote>
@@ -378,30 +407,17 @@
       </tags>
   </entry>
   <entry>
-    <title>Obsidian插件开发</title>
-    <url>/2024/10/10/Obsidian%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>之所以要开发 Obsidian 插件，是因为之前整理了<a href="/2024/09/27/%E9%80%9A%E8%BF%87Gitee%E7%9A%84OpenAPI%E5%AE%9E%E7%8E%B0%E5%9B%BE%E5%BA%8A/">通过Gitee的OpenAPI实现图床</a>，想着将 Obsidian 的图片也上传到图床，然后生成链接，这样就可以在 Obsidian 中直接使用图片链接了。</p>
-<p>但是后来想到，Obsidian 还是可以插入文件的，如果将文件也上传到图床固然可行，但是文件的预览就不太方便了。因为 Obsidian 中仅是插入了文件链接，点击之后实际是通过浏览器打开的，像 .docx 等文件浏览器是不支持预览的，所以就直接下载下来了，这种体验并不友好。</p>
-<p>最终想了想，Obsidian 的笔记其实还是同步到 iCloud 中的（自己配置的），所以图片、文件也都保持这种方式吧。</p>
-<p>但是插件已经开发出来了，这里就记录一下开发过程。</p>
-<h2 id="开发文档"><a href="#开发文档" class="headerlink" title="开发文档"></a>开发文档</h2><p>开发文档可以参考<a href="https://luhaifeng666.github.io/obsidian-plugin-docs-zh/zh2.0/getting-started/create-your-first-plugin.html">Obsidian 插件开发文档</a>，步骤还是很详细的，示例工程都有了。</p>
-<h2 id="上传文件到-Gitee"><a href="#上传文件到-Gitee" class="headerlink" title="上传文件到 Gitee"></a>上传文件到 Gitee</h2><p>我的这个插件想要实现的功能是，将粘贴或拖拽到 Obsidian 中的图片、文件自动上传到 Gitee，并生成链接，然后直接插入到笔记中。</p>
-<h3 id="插件配置"><a href="#插件配置" class="headerlink" title="插件配置"></a>插件配置</h3><p>首先，需要配置 Gitee 的相关信息，包括用户名、仓库地址、分支名、token 等。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">DEFAULT_SETTINGS</span>: <span class="title class_">MyPluginSettings</span> = &#123;</span><br><span class="line">  <span class="attr">repo</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">  <span class="attr">branch</span>: <span class="string">&#x27;master&#x27;</span>,</span><br><span class="line">  <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">  <span class="attr">token</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><p>然后，需要监听 Obsidian 中的粘贴和拖拽事件，当有图片或文件被粘贴或拖拽到 Obsidian 中时，触发上传操作。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">onload</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">loadSettings</span>();</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">registerEvent</span>(</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">app</span>.<span class="property">workspace</span>.<span class="title function_">on</span>(<span class="string">&#x27;editor-paste&#x27;</span>, <span class="function">(<span class="params">event, editor, content</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">uploadFiles</span>(event.<span class="property">clipboardData</span>?.<span class="property">files</span>, event, editor);</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">registerEvent</span>(</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">app</span>.<span class="property">workspace</span>.<span class="title function_">on</span>(<span class="string">&#x27;editor-drop&#x27;</span>, <span class="function">(<span class="params">event, editor, content</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">uploadFiles</span>(event.<span class="property">dataTransfer</span>?.<span class="property">files</span>, event, editor);</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">uploadFiles</span>(<span class="params">files: FileList | <span class="literal">undefined</span>, event: ClipboardEvent | DragEvent, editor: Editor</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!files?.<span class="property">length</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  event.<span class="title function_">preventDefault</span>();</span><br><span class="line">  event.<span class="title function_">stopPropagation</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">settings</span>.<span class="property">subPathable</span>) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">SampleModal</span>(<span class="variable language_">this</span>.<span class="property">app</span>, files, editor, <span class="variable language_">this</span>.<span class="property">settings</span>).<span class="title function_">open</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_">uploadToGitee</span>(files, <span class="variable language_">this</span>.<span class="property">settings</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      editor.<span class="title function_">replaceSelection</span>(res.<span class="title function_">filter</span>(<span class="function"><span class="params">x</span> =&gt;</span> x).<span class="title function_">join</span>(<span class="string">&#x27;\n&#x27;</span>));</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h3><p>上传图片的功能比较简单，直接使用 Gitee 提供的 API 即可。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">uploadToGitee</span>(<span class="params">fileList: FileList, settings: MyPluginSettings, filePath: string = <span class="string">&#x27;&#x27;</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> tooLargeFiles = <span class="title class_">Array</span>.<span class="title function_">from</span>(fileList).<span class="title function_">filter</span>(<span class="function"><span class="params">file</span> =&gt;</span> file.<span class="property">size</span> &gt; <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (tooLargeFiles.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`文件大小不能超过10MB，<span class="subst">$&#123;tooLargeFiles.map(file =&gt; file.name).join(<span class="string">&#x27;、&#x27;</span>)&#125;</span>将会被丢弃`</span>, <span class="number">5000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">all</span>(<span class="title class_">Array</span>.<span class="title function_">from</span>(fileList).<span class="title function_">filter</span>(<span class="function"><span class="params">file</span> =&gt;</span> file.<span class="property">size</span> &lt;= <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>).<span class="title function_">map</span>(<span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> reader = <span class="keyword">new</span> <span class="title class_">FileReader</span>();</span><br><span class="line">      reader.<span class="property">onload</span> = <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        axios.<span class="title function_">post</span>(<span class="string">`https://gitee.com/api/v5/repos/<span class="subst">$&#123;settings.repo&#125;</span>/contents/<span class="subst">$&#123;settings.path&#125;</span>/<span class="subst">$&#123;filePath&#125;</span>/<span class="subst">$&#123;file.name&#125;</span>`</span>, &#123;</span><br><span class="line">          <span class="attr">access_token</span>: settings.<span class="property">token</span>,</span><br><span class="line">          <span class="attr">content</span>: (reader.<span class="property">result</span> <span class="keyword">as</span> string).<span class="title function_">replace</span>(<span class="string">`data:<span class="subst">$&#123;file.type&#125;</span>;base64,`</span>, <span class="string">&#x27;&#x27;</span>),</span><br><span class="line">          <span class="attr">message</span>: <span class="string">&#x27;upload image&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(file.<span class="property">type</span>.<span class="title function_">includes</span>(<span class="string">&#x27;image&#x27;</span>) ? <span class="string">`![<span class="subst">$&#123;file.name&#125;</span>](<span class="subst">$&#123;res.data.content.download_url&#125;</span>)`</span> : res.<span class="property">data</span>.<span class="property">content</span>.<span class="property">download_url</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">          .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`上传文件<span class="subst">$&#123;file.name&#125;</span>失败，失败原因：<span class="subst">$&#123;err.response.data.message&#125;</span>`</span>, <span class="number">5000</span>);</span><br><span class="line">            <span class="title function_">resolve</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;;</span><br><span class="line">      reader.<span class="property">onerror</span> = <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Notice</span>(<span class="string">`文件读取<span class="subst">$&#123;file.name&#125;</span>失败`</span>, <span class="number">5000</span>);</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">      &#125;;</span><br><span class="line">      reader.<span class="title function_">readAsDataURL</span>(file);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="代码地址"><a href="#代码地址" class="headerlink" title="代码地址"></a>代码地址</h3><p><a href="https://github.com/DoAutumn/img-plugin-obsidian">https://github.com/DoAutumn/img-plugin-obsidian</a></p>
-]]></content>
+    <title>.gitignore文件不起作用的原因及解决办法</title>
+    <url>/2025/01/13/gitignore%E6%96%87%E4%BB%B6%E4%B8%8D%E8%B5%B7%E4%BD%9C%E7%94%A8%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    <content><![CDATA[<p>项目开发中使用Git作为版本管理工具时，有时并非在项目一开始就添加了.gitignore文件来管理Git忽略规则，或是在项目开发过程中添加或移除了忽略规则，这时由于Git在本地维护着一份遵从创建本地项目时的gitignore规则的Git缓存，因此会造成.gitignore文件不起作用的现象。</p>
+<p>解决这个问题的方式就是清除掉本地项目的Git缓存，通过重新创建Git索引的方式来生成遵从新.gitignore文件中规则的本地Git版本，再将该Git版本提交到主干。</p>
+<p>具体命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">rm</span> -r --cached .</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;update .gitignore&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>工具</category>
+        <category>Git</category>
       </categories>
       <tags>
-        <tag>Obsidian</tag>
+        <tag>.gitignore</tag>
       </tags>
   </entry>
   <entry>
@@ -558,21 +574,6 @@
       </categories>
   </entry>
   <entry>
-    <title>markdown文件转word文件</title>
-    <url>/2023/01/11/markdown%E6%96%87%E4%BB%B6%E8%BD%ACword%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
-<li>1、安装nodejs</li>
-<li>2、安装marked，<code>npm i marked</code></li>
-<li>3、转换成doc格式前，需要把md文件转换为html标签格式，才能保留doc文件中的样式，新建立<code>head.html</code>模板文件，内容如下：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Markdoc Preview<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"><span class="selector-tag">html</span> &#123;<span class="attribute">font-family</span>: sans-serif; -ms-text-size-adjust: <span class="number">100%</span>; -webkit-text-size-adjust: <span class="number">100%</span>; &#125;<span class="selector-tag">body</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">article</span>,<span class="selector-tag">aside</span>,<span class="selector-tag">details</span>,<span class="selector-tag">figcaption</span>,<span class="selector-tag">figure</span>,<span class="selector-tag">footer</span>,<span class="selector-tag">header</span>,<span class="selector-tag">hgroup</span>,<span class="selector-tag">main</span>,<span class="selector-tag">nav</span>,<span class="selector-tag">section</span>,<span class="selector-tag">summary</span> &#123;<span class="attribute">display</span>: block;&#125;<span class="selector-tag">audio</span>,<span class="selector-tag">canvas</span>,progress,<span class="selector-tag">video</span> &#123;<span class="attribute">display</span>: inline-block; <span class="attribute">vertical-align</span>: baseline; &#125;<span class="selector-tag">audio</span><span class="selector-pseudo">:not</span>(<span class="selector-attr">[controls]</span>) &#123;<span class="attribute">display</span>: none;<span class="attribute">height</span>: <span class="number">0</span>;&#125;<span class="selector-attr">[hidden]</span>,template &#123;<span class="attribute">display</span>: none;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">background</span>: transparent;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:active</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;<span class="attribute">outline</span>: <span class="number">0</span>;&#125;<span class="selector-tag">abbr</span><span class="selector-attr">[title]</span> &#123;<span class="attribute">border-bottom</span>: <span class="number">1px</span> dotted;&#125;<span class="selector-tag">b</span>,<span class="selector-tag">strong</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">dfn</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-tag">h1</span> &#123;<span class="attribute">font-size</span>: <span class="number">2em</span>;<span class="attribute">margin</span>: <span class="number">0.67em</span> <span class="number">0</span>;&#125;<span class="selector-tag">mark</span> &#123;<span class="attribute">background</span>: <span class="number">#ff0</span>;<span class="attribute">color</span>: <span class="number">#000</span>;&#125;small &#123;<span class="attribute">font-size</span>: <span class="number">80%</span>;&#125;sub,<span class="selector-tag">sup</span> &#123;<span class="attribute">font-size</span>: <span class="number">75%</span>;<span class="attribute">line-height</span>: <span class="number">0</span>;<span class="attribute">position</span>: relative;<span class="attribute">vertical-align</span>: baseline;&#125;<span class="selector-tag">sup</span> &#123;<span class="attribute">top</span>: -<span class="number">0.5em</span>;&#125;sub &#123;<span class="attribute">bottom</span>: -<span class="number">0.25em</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>;&#125;svg<span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:root</span>) &#123;<span class="attribute">overflow</span>: hidden;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">1em</span> <span class="number">40px</span>;&#125;hr &#123;-moz-<span class="attribute">box-sizing</span>: content-box;<span class="attribute">box-sizing</span>: content-box;<span class="attribute">height</span>: <span class="number">0</span>;&#125;pre &#123;<span class="attribute">overflow</span>: auto;&#125;<span class="selector-tag">code</span>,<span class="selector-tag">kbd</span>,pre,<span class="selector-tag">samp</span> &#123;<span class="attribute">font-family</span>: monospace, monospace;<span class="attribute">font-size</span>: <span class="number">1em</span>;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">input</span>,optgroup,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">color</span>: inherit; <span class="attribute">font</span>: inherit; <span class="attribute">margin</span>: <span class="number">0</span>; &#125;<span class="selector-tag">button</span> &#123;<span class="attribute">overflow</span>: visible;&#125;<span class="selector-tag">button</span>,select &#123;<span class="attribute">text-transform</span>: none;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;button&quot;</span>]</span>, <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;reset&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;-webkit-appearance: button; <span class="attribute">cursor</span>: pointer; &#125;<span class="selector-tag">button</span><span class="selector-attr">[disabled]</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[disabled]</span> &#123;<span class="attribute">cursor</span>: default;&#125;<span class="selector-tag">button</span>::-moz-focus-inner,input::-moz-focus-inner &#123;<span class="attribute">border</span>: <span class="number">0</span>;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;<span class="selector-tag">input</span> &#123;<span class="attribute">line-height</span>: normal;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;checkbox&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;radio&quot;</span>]</span> &#123;<span class="attribute">box-sizing</span>: border-box; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;number&quot;</span>]</span>::-webkit-inner-spin-button,input[type=<span class="string">&quot;number&quot;</span>]::-webkit-outer-spin-button &#123;<span class="attribute">height</span>: auto;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span> &#123;-webkit-appearance: textfield; -moz-<span class="attribute">box-sizing</span>: content-box;-webkit-<span class="attribute">box-sizing</span>: content-box; <span class="attribute">box-sizing</span>: content-box;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span>::-webkit-search-cancel-button,input[type=<span class="string">&quot;search&quot;</span>]::-webkit-search-decoration &#123;-webkit-appearance: none;&#125;<span class="selector-tag">fieldset</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#c0c0c0</span>;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;<span class="attribute">padding</span>: <span class="number">0.35em</span> <span class="number">0.625em</span> <span class="number">0.75em</span>;&#125;<span class="selector-tag">legend</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">textarea</span> &#123;<span class="attribute">overflow</span>: auto;&#125;optgroup &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">table</span> &#123;<span class="attribute">border-collapse</span>: collapse;<span class="attribute">border-spacing</span>: <span class="number">0</span>;&#125;<span class="selector-tag">td</span>,<span class="selector-tag">th</span> &#123;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;* &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;*<span class="selector-pseudo">:before</span>,*<span class="selector-pseudo">:after</span> &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;<span class="selector-tag">html</span> &#123;<span class="attribute">font-size</span>: <span class="number">62.5%</span>;-webkit-tap-highlight-<span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);&#125;<span class="selector-tag">body</span> &#123;<span class="attribute">font-family</span>: <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, Arial, <span class="string">&#x27;Microsoft Yahei&#x27;</span>, sans-serif;<span class="attribute">font-size</span>: <span class="number">14px</span>;<span class="attribute">line-height</span>: <span class="number">1.42857143</span>;<span class="attribute">color</span>: <span class="number">#333333</span>;<span class="attribute">background-color</span>: <span class="number">#ffffff</span>;&#125;<span class="selector-tag">input</span>,<span class="selector-tag">button</span>,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">font-family</span>: inherit;<span class="attribute">font-size</span>: inherit;<span class="attribute">line-height</span>: inherit;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">color</span>: <span class="number">#428bca</span>;<span class="attribute">text-decoration</span>: none;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">color</span>: <span class="number">#2a6496</span>;<span class="attribute">text-decoration</span>: underline;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">outline</span>: thin dotted;<span class="attribute">outline</span>: <span class="number">5px</span> auto -webkit-focus-ring-color;<span class="attribute">outline-offset</span>: -<span class="number">2px</span>;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">vertical-align</span>: middle;&#125;<span class="selector-class">.hljs</span> &#123;<span class="attribute">display</span>: block;<span class="attribute">overflow-x</span>: auto;<span class="attribute">padding</span>: <span class="number">0.5em</span>;<span class="attribute">background</span>: <span class="number">#f0f0f0</span>;-webkit-text-size-adjust: none;&#125;<span class="selector-class">.hljs</span>,<span class="selector-class">.hljs-subst</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-title</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-title</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-parent</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-rules</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-preprocessor</span>,<span class="selector-class">.hljs-pragma</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-template_tag</span>,<span class="selector-class">.django</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-addition</span>,<span class="selector-class">.hljs-flow</span>,<span class="selector-class">.hljs-stream</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-cbracket</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-special</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-function_or_atom</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-attribute</span> &#123;<span class="attribute">color</span>: <span class="number">#800</span>;&#125;<span class="selector-class">.smartquote</span>,<span class="selector-class">.hljs-comment</span>,<span class="selector-class">.hljs-annotation</span>,<span class="selector-class">.diff</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.hljs-chunk</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-blockquote</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-blockquote</span> &#123;<span class="attribute">color</span>: <span class="number">#888</span>;&#125;<span class="selector-class">.hljs-number</span>,<span class="selector-class">.hljs-date</span>,<span class="selector-class">.hljs-regexp</span>,<span class="selector-class">.hljs-literal</span>,<span class="selector-class">.hljs-hexcolor</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-char</span>,<span class="selector-class">.go</span> <span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-change</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.makefile</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_url</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_url</span> &#123;<span class="attribute">color</span>: <span class="number">#080</span>;&#125;<span class="selector-class">.hljs-label</span>,<span class="selector-class">.hljs-javadoc</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-decorator</span>,<span class="selector-class">.hljs-filter</span> <span class="selector-class">.hljs-argument</span>,<span class="selector-class">.hljs-localvars</span>,<span class="selector-class">.hljs-array</span>,<span class="selector-class">.hljs-attr_selector</span>,<span class="selector-class">.hljs-important</span>,<span class="selector-class">.hljs-pseudo</span>,<span class="selector-class">.hljs-pi</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.hljs-doctype</span>,<span class="selector-class">.hljs-deletion</span>,<span class="selector-class">.hljs-envvar</span>,<span class="selector-class">.hljs-shebang</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-sqbracket</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-reserved</span>,<span class="selector-class">.hljs-prompt</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.vhdl</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.clojure</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-property</span>,<span class="selector-class">.hljs-phony</span> &#123;<span class="attribute">color</span>: <span class="number">#88f</span>;&#125;<span class="selector-class">.hljs-keyword</span>,<span class="selector-class">.hljs-id</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.css</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-javadoctag</span>,<span class="selector-class">.hljs-phpdoc</span>,<span class="selector-class">.hljs-dartdoc</span>,<span class="selector-class">.hljs-yardoctag</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-winutils</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-type</span>,<span class="selector-class">.hljs-typename</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.hljs-request</span>,<span class="selector-class">.hljs-status</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-emphasis</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-emphasis</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span> &#123;<span class="attribute">font-weight</span>: normal;&#125;<span class="selector-class">.coffeescript</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.javascript</span> <span class="selector-class">.xml</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.markup</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.xml</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.vbscript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.css</span>,<span class="selector-class">.xml</span> <span class="selector-class">.hljs-cdata</span> &#123;<span class="attribute">opacity</span>: <span class="number">0.5</span>;&#125;<span class="selector-id">#container</span> &#123;<span class="attribute">padding</span>: <span class="number">15px</span>;<span class="attribute">margin-left</span>:<span class="number">20px</span>;&#125;pre &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">border-radius</span>: <span class="number">4px</span>;<span class="attribute">display</span>: block;&#125;pre <span class="selector-tag">code</span> &#123;<span class="attribute">white-space</span>: pre-wrap;&#125;<span class="selector-class">.hljs</span>,<span class="selector-tag">code</span> &#123;<span class="attribute">font-family</span>: Monaco, Menlo, Consolas, <span class="string">&#x27;Courier New&#x27;</span>, monospace;&#125;pre&#123;<span class="attribute">background-color</span>: <span class="number">#dddddd</span>;<span class="attribute">padding</span>:<span class="number">8px</span> <span class="number">0px</span> <span class="number">8px</span> <span class="number">30px</span>;<span class="attribute">word-wrap</span>: break-word;&#125;<span class="selector-tag">table</span> <span class="selector-tag">tbody</span> <span class="selector-tag">tr</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>n) &#123;<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">158</span>,<span class="number">188</span>,<span class="number">226</span>,<span class="number">0.12</span>); &#125;<span class="selector-pseudo">:not</span>(pre) &gt; <span class="selector-tag">code</span> &#123;<span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">4px</span>;<span class="attribute">font-size</span>: <span class="number">90%</span>;<span class="attribute">color</span>: <span class="number">#c7254e</span>;<span class="attribute">background-color</span>: <span class="number">#f9f2f4</span>;<span class="attribute">white-space</span>: nowrap;<span class="attribute">border-radius</span>: <span class="number">4px</span>;&#125;<span class="selector-tag">th</span>, <span class="selector-tag">td</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">12px</span>;&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">border-left-width</span>: <span class="number">10px</span>;<span class="attribute">background-color</span>: <span class="built_in">rgba</span>(<span class="number">102</span>,<span class="number">128</span>,<span class="number">153</span>,<span class="number">0.05</span>);<span class="attribute">border-top-right-radius</span>: <span class="number">5px</span>;<span class="attribute">border-bottom-right-radius</span>: <span class="number">5px</span>;<span class="attribute">padding</span>: <span class="number">1px</span> <span class="number">20px</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:before</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:after</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;\00A0 \2014&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&quot;&quot;</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">1.1em</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">p</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">1.1em</span>;<span class="attribute">font-size</span>: <span class="number">1em</span>;<span class="attribute">line-height</span>: <span class="number">1.45</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">ul</span><span class="selector-pseudo">:last-child</span>,<span class="selector-tag">blockquote</span> <span class="selector-tag">ol</span><span class="selector-pseudo">:last-child</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">0</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">21px</span>;<span class="attribute">border-left</span>: <span class="number">10px</span> solid <span class="number">#dddddd</span>;&#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span> <span class="attr">marginwidth</span>=<span class="string">&quot;0&quot;</span> <span class="attr">marginheight</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">      replace_area</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>4、新建js脚本文件<code>convert.js</code>内容如下：<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> &#123; marked &#125; = <span class="built_in">require</span>(<span class="string">&#x27;marked&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取第3步创建的模板html文件</span></span><br><span class="line"><span class="keyword">var</span> headFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;head.html&#x27;</span>);</span><br><span class="line"><span class="comment">// 读取将要被转换的md文件</span></span><br><span class="line"><span class="keyword">var</span> mdFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;mark.md&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;----正在转换...&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用marked将md文件转换成html</span></span><br><span class="line"><span class="keyword">var</span> mdToHtmlStr = <span class="title function_">marked</span>(mdFile.<span class="title function_">toString</span>());</span><br><span class="line"><span class="comment">// 将md转换成html字符串替换到html模板文件中replace_area的位置</span></span><br><span class="line"><span class="keyword">var</span> content = headFile.<span class="title function_">toString</span>().<span class="title function_">replace</span>(<span class="string">&#x27;replace_area&#x27;</span>, mdToHtmlStr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&quot;准备写入文件&quot;);</span></span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">writeFile</span>(<span class="string">&#x27;output.doc&#x27;</span>, content, <span class="keyword">function</span>(<span class="params">err</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;数据写入成功！&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// console.log(content);</span></span><br></pre></td></tr></table></figure></li>
-<li>5、运行脚本<code>node convert.js</code>即可</li>
-</ul>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-  </entry>
-  <entry>
     <title>VS Code的一些偏好设置</title>
     <url>/2023/02/22/vscode%E7%9A%84%E4%B8%80%E4%BA%9B%E5%81%8F%E5%A5%BD%E8%AE%BE%E7%BD%AE/</url>
     <content><![CDATA[<p><a href="https://code.visualstudio.com/">VS Code</a>作为前端开发的必备神器，其作用自然不必多说。这里记录下个人的使用习惯，免得以后再查。</p>
@@ -601,51 +602,15 @@
       </tags>
   </entry>
   <entry>
-    <title>一文彻底看懂package.json中的各种dependencies</title>
-    <url>/2022/08/31/%E4%B8%80%E6%96%87%E5%BD%BB%E5%BA%95%E7%9C%8B%E6%87%82package-json%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8Ddependencies/</url>
-    <content><![CDATA[<p>关于package.json中的各种dependencies的详细解释，可以直接参考<a href="https://developer.aliyun.com/article/1051418">这篇文章</a>。</p>
-<p>这里只做一个最终结论的摘录。</p>
-<table>
-<thead>
-<tr>
-<th>依赖类型</th>
-<th>定义在项目中</th>
-<th>定义在依赖中</th>
-<th>一句话总结</th>
-<th>举例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dependencies</td>
-<td>会被安装</td>
-<td>会被安装</td>
-<td>定义包运行所需要的依赖包</td>
-<td>某前端项目使用 react 进行开发，需要将 react 添加到 dependencies 中</td>
-</tr>
-<tr>
-<td>devDependencies</td>
-<td>会被安装</td>
-<td>不会被安装</td>
-<td>定义包在开发时所需要的依赖包</td>
-<td>antd 使用了 @testing-library&#x2F;react 进行测试，需要将 @testing-library&#x2F;react 添加到 devDependencies 中</td>
-</tr>
-<tr>
-<td>peerDependencies</td>
-<td>不会被安装</td>
-<td>不会被安装，但是如果指向的依赖没有被安装或不符合时会有警告（peerDependenciesMeta 会影响该行为）</td>
-<td>定义该包运行所需要的依赖环境，一般和 devDependencies 一起使用</td>
-<td>antd 是一个 react 组件库，为了不和使用它的项目中的 react 版本定义造成冲突，需要将支持的 react 版本添加到 peerDependencies 中</td>
-</tr>
-<tr>
-<td>optionalDependencies</td>
-<td>会被安装，但是安装报错不会影响</td>
-<td>会被安装，但是安装报错不会影响</td>
-<td>optionalDependencies 用于定义对包运行不会造成影响的依赖包</td>
-<td>一个包在使用 A 包进行了某些操作，但是如果 A 包不在的话，可以使用别的 API 达到同样的效果，可以将 A 包添加到 optionalDependencies 中</td>
-</tr>
-</tbody></table>
-<hr>
-<p>另外记录下版本号的格式规定：<br><code>固定版本</code>：如4.0.3<br><code>～</code>：如～4.0.3，表示安装 4.0.x 的最新版本，也就是说安装时不会改变主版本号和次版本号<br><code>^</code>：如^17.0.2，表示安装 17.x.x 的最新版本，也就是说安装时不会改变主版本号<br><code>latest</code>：安装最新版本</p>
+    <title>markdown文件转word文件</title>
+    <url>/2023/01/11/markdown%E6%96%87%E4%BB%B6%E8%BD%ACword%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>1、安装nodejs</li>
+<li>2、安装marked，<code>npm i marked</code></li>
+<li>3、转换成doc格式前，需要把md文件转换为html标签格式，才能保留doc文件中的样式，新建立<code>head.html</code>模板文件，内容如下：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Markdoc Preview<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"><span class="selector-tag">html</span> &#123;<span class="attribute">font-family</span>: sans-serif; -ms-text-size-adjust: <span class="number">100%</span>; -webkit-text-size-adjust: <span class="number">100%</span>; &#125;<span class="selector-tag">body</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">article</span>,<span class="selector-tag">aside</span>,<span class="selector-tag">details</span>,<span class="selector-tag">figcaption</span>,<span class="selector-tag">figure</span>,<span class="selector-tag">footer</span>,<span class="selector-tag">header</span>,<span class="selector-tag">hgroup</span>,<span class="selector-tag">main</span>,<span class="selector-tag">nav</span>,<span class="selector-tag">section</span>,<span class="selector-tag">summary</span> &#123;<span class="attribute">display</span>: block;&#125;<span class="selector-tag">audio</span>,<span class="selector-tag">canvas</span>,progress,<span class="selector-tag">video</span> &#123;<span class="attribute">display</span>: inline-block; <span class="attribute">vertical-align</span>: baseline; &#125;<span class="selector-tag">audio</span><span class="selector-pseudo">:not</span>(<span class="selector-attr">[controls]</span>) &#123;<span class="attribute">display</span>: none;<span class="attribute">height</span>: <span class="number">0</span>;&#125;<span class="selector-attr">[hidden]</span>,template &#123;<span class="attribute">display</span>: none;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">background</span>: transparent;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:active</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;<span class="attribute">outline</span>: <span class="number">0</span>;&#125;<span class="selector-tag">abbr</span><span class="selector-attr">[title]</span> &#123;<span class="attribute">border-bottom</span>: <span class="number">1px</span> dotted;&#125;<span class="selector-tag">b</span>,<span class="selector-tag">strong</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">dfn</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-tag">h1</span> &#123;<span class="attribute">font-size</span>: <span class="number">2em</span>;<span class="attribute">margin</span>: <span class="number">0.67em</span> <span class="number">0</span>;&#125;<span class="selector-tag">mark</span> &#123;<span class="attribute">background</span>: <span class="number">#ff0</span>;<span class="attribute">color</span>: <span class="number">#000</span>;&#125;small &#123;<span class="attribute">font-size</span>: <span class="number">80%</span>;&#125;sub,<span class="selector-tag">sup</span> &#123;<span class="attribute">font-size</span>: <span class="number">75%</span>;<span class="attribute">line-height</span>: <span class="number">0</span>;<span class="attribute">position</span>: relative;<span class="attribute">vertical-align</span>: baseline;&#125;<span class="selector-tag">sup</span> &#123;<span class="attribute">top</span>: -<span class="number">0.5em</span>;&#125;sub &#123;<span class="attribute">bottom</span>: -<span class="number">0.25em</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>;&#125;svg<span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:root</span>) &#123;<span class="attribute">overflow</span>: hidden;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">1em</span> <span class="number">40px</span>;&#125;hr &#123;-moz-<span class="attribute">box-sizing</span>: content-box;<span class="attribute">box-sizing</span>: content-box;<span class="attribute">height</span>: <span class="number">0</span>;&#125;pre &#123;<span class="attribute">overflow</span>: auto;&#125;<span class="selector-tag">code</span>,<span class="selector-tag">kbd</span>,pre,<span class="selector-tag">samp</span> &#123;<span class="attribute">font-family</span>: monospace, monospace;<span class="attribute">font-size</span>: <span class="number">1em</span>;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">input</span>,optgroup,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">color</span>: inherit; <span class="attribute">font</span>: inherit; <span class="attribute">margin</span>: <span class="number">0</span>; &#125;<span class="selector-tag">button</span> &#123;<span class="attribute">overflow</span>: visible;&#125;<span class="selector-tag">button</span>,select &#123;<span class="attribute">text-transform</span>: none;&#125;<span class="selector-tag">button</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;button&quot;</span>]</span>, <span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;reset&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;submit&quot;</span>]</span> &#123;-webkit-appearance: button; <span class="attribute">cursor</span>: pointer; &#125;<span class="selector-tag">button</span><span class="selector-attr">[disabled]</span>,<span class="selector-tag">html</span> <span class="selector-tag">input</span><span class="selector-attr">[disabled]</span> &#123;<span class="attribute">cursor</span>: default;&#125;<span class="selector-tag">button</span>::-moz-focus-inner,input::-moz-focus-inner &#123;<span class="attribute">border</span>: <span class="number">0</span>;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;<span class="selector-tag">input</span> &#123;<span class="attribute">line-height</span>: normal;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;checkbox&quot;</span>]</span>,<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;radio&quot;</span>]</span> &#123;<span class="attribute">box-sizing</span>: border-box; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;number&quot;</span>]</span>::-webkit-inner-spin-button,input[type=<span class="string">&quot;number&quot;</span>]::-webkit-outer-spin-button &#123;<span class="attribute">height</span>: auto;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span> &#123;-webkit-appearance: textfield; -moz-<span class="attribute">box-sizing</span>: content-box;-webkit-<span class="attribute">box-sizing</span>: content-box; <span class="attribute">box-sizing</span>: content-box;&#125;<span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;search&quot;</span>]</span>::-webkit-search-cancel-button,input[type=<span class="string">&quot;search&quot;</span>]::-webkit-search-decoration &#123;-webkit-appearance: none;&#125;<span class="selector-tag">fieldset</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#c0c0c0</span>;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;<span class="attribute">padding</span>: <span class="number">0.35em</span> <span class="number">0.625em</span> <span class="number">0.75em</span>;&#125;<span class="selector-tag">legend</span> &#123;<span class="attribute">border</span>: <span class="number">0</span>; <span class="attribute">padding</span>: <span class="number">0</span>; &#125;<span class="selector-tag">textarea</span> &#123;<span class="attribute">overflow</span>: auto;&#125;optgroup &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-tag">table</span> &#123;<span class="attribute">border-collapse</span>: collapse;<span class="attribute">border-spacing</span>: <span class="number">0</span>;&#125;<span class="selector-tag">td</span>,<span class="selector-tag">th</span> &#123;<span class="attribute">padding</span>: <span class="number">0</span>;&#125;* &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;*<span class="selector-pseudo">:before</span>,*<span class="selector-pseudo">:after</span> &#123;-webkit-<span class="attribute">box-sizing</span>: border-box;-moz-<span class="attribute">box-sizing</span>: border-box;<span class="attribute">box-sizing</span>: border-box;&#125;<span class="selector-tag">html</span> &#123;<span class="attribute">font-size</span>: <span class="number">62.5%</span>;-webkit-tap-highlight-<span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);&#125;<span class="selector-tag">body</span> &#123;<span class="attribute">font-family</span>: <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, Arial, <span class="string">&#x27;Microsoft Yahei&#x27;</span>, sans-serif;<span class="attribute">font-size</span>: <span class="number">14px</span>;<span class="attribute">line-height</span>: <span class="number">1.42857143</span>;<span class="attribute">color</span>: <span class="number">#333333</span>;<span class="attribute">background-color</span>: <span class="number">#ffffff</span>;&#125;<span class="selector-tag">input</span>,<span class="selector-tag">button</span>,select,<span class="selector-tag">textarea</span> &#123;<span class="attribute">font-family</span>: inherit;<span class="attribute">font-size</span>: inherit;<span class="attribute">line-height</span>: inherit;&#125;<span class="selector-tag">a</span> &#123;<span class="attribute">color</span>: <span class="number">#428bca</span>;<span class="attribute">text-decoration</span>: none;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>,<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">color</span>: <span class="number">#2a6496</span>;<span class="attribute">text-decoration</span>: underline;&#125;<span class="selector-tag">a</span><span class="selector-pseudo">:focus</span> &#123;<span class="attribute">outline</span>: thin dotted;<span class="attribute">outline</span>: <span class="number">5px</span> auto -webkit-focus-ring-color;<span class="attribute">outline-offset</span>: -<span class="number">2px</span>;&#125;<span class="selector-tag">figure</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span>;&#125;<span class="selector-tag">img</span> &#123;<span class="attribute">vertical-align</span>: middle;&#125;<span class="selector-class">.hljs</span> &#123;<span class="attribute">display</span>: block;<span class="attribute">overflow-x</span>: auto;<span class="attribute">padding</span>: <span class="number">0.5em</span>;<span class="attribute">background</span>: <span class="number">#f0f0f0</span>;-webkit-text-size-adjust: none;&#125;<span class="selector-class">.hljs</span>,<span class="selector-class">.hljs-subst</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-title</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-title</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-parent</span>,<span class="selector-class">.hljs-tag</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-rules</span> <span class="selector-class">.hljs-value</span>,<span class="selector-class">.hljs-preprocessor</span>,<span class="selector-class">.hljs-pragma</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-symbol</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-template_tag</span>,<span class="selector-class">.django</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-addition</span>,<span class="selector-class">.hljs-flow</span>,<span class="selector-class">.hljs-stream</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-cbracket</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-special</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-function_or_atom</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-attribute</span> &#123;<span class="attribute">color</span>: <span class="number">#800</span>;&#125;<span class="selector-class">.smartquote</span>,<span class="selector-class">.hljs-comment</span>,<span class="selector-class">.hljs-annotation</span>,<span class="selector-class">.diff</span> <span class="selector-class">.hljs-header</span>,<span class="selector-class">.hljs-chunk</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-blockquote</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-blockquote</span> &#123;<span class="attribute">color</span>: <span class="number">#888</span>;&#125;<span class="selector-class">.hljs-number</span>,<span class="selector-class">.hljs-date</span>,<span class="selector-class">.hljs-regexp</span>,<span class="selector-class">.hljs-literal</span>,<span class="selector-class">.hljs-hexcolor</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-symbol</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-char</span>,<span class="selector-class">.go</span> <span class="selector-class">.hljs-constant</span>,<span class="selector-class">.hljs-change</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.makefile</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_url</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_url</span> &#123;<span class="attribute">color</span>: <span class="number">#080</span>;&#125;<span class="selector-class">.hljs-label</span>,<span class="selector-class">.hljs-javadoc</span>,<span class="selector-class">.ruby</span> <span class="selector-class">.hljs-string</span>,<span class="selector-class">.hljs-decorator</span>,<span class="selector-class">.hljs-filter</span> <span class="selector-class">.hljs-argument</span>,<span class="selector-class">.hljs-localvars</span>,<span class="selector-class">.hljs-array</span>,<span class="selector-class">.hljs-attr_selector</span>,<span class="selector-class">.hljs-important</span>,<span class="selector-class">.hljs-pseudo</span>,<span class="selector-class">.hljs-pi</span>,<span class="selector-class">.haml</span> <span class="selector-class">.hljs-bullet</span>,<span class="selector-class">.hljs-doctype</span>,<span class="selector-class">.hljs-deletion</span>,<span class="selector-class">.hljs-envvar</span>,<span class="selector-class">.hljs-shebang</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-sqbracket</span>,<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.erlang_repl</span> <span class="selector-class">.hljs-reserved</span>,<span class="selector-class">.hljs-prompt</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-link_label</span>,<span class="selector-class">.vhdl</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.clojure</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.hljs-attribute</span>,<span class="selector-class">.coffeescript</span> <span class="selector-class">.hljs-property</span>,<span class="selector-class">.hljs-phony</span> &#123;<span class="attribute">color</span>: <span class="number">#88f</span>;&#125;<span class="selector-class">.hljs-keyword</span>,<span class="selector-class">.hljs-id</span>,<span class="selector-class">.hljs-title</span>,<span class="selector-class">.hljs-built_in</span>,<span class="selector-class">.css</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-javadoctag</span>,<span class="selector-class">.hljs-phpdoc</span>,<span class="selector-class">.hljs-dartdoc</span>,<span class="selector-class">.hljs-yardoctag</span>,<span class="selector-class">.smalltalk</span> <span class="selector-class">.hljs-class</span>,<span class="selector-class">.hljs-winutils</span>,<span class="selector-class">.bash</span> <span class="selector-class">.hljs-variable</span>,<span class="selector-class">.apache</span> <span class="selector-class">.hljs-tag</span>,<span class="selector-class">.hljs-type</span>,<span class="selector-class">.hljs-typename</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-command</span>,<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-strong</span>,<span class="selector-class">.hljs-request</span>,<span class="selector-class">.hljs-status</span> &#123;<span class="attribute">font-weight</span>: bold;&#125;<span class="selector-class">.asciidoc</span> <span class="selector-class">.hljs-emphasis</span>,<span class="selector-class">.markdown</span> <span class="selector-class">.hljs-emphasis</span> &#123;<span class="attribute">font-style</span>: italic;&#125;<span class="selector-class">.nginx</span> <span class="selector-class">.hljs-built_in</span> &#123;<span class="attribute">font-weight</span>: normal;&#125;<span class="selector-class">.coffeescript</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.javascript</span> <span class="selector-class">.xml</span>,<span class="selector-class">.lasso</span> <span class="selector-class">.markup</span>,<span class="selector-class">.tex</span> <span class="selector-class">.hljs-formula</span>,<span class="selector-class">.xml</span> <span class="selector-class">.javascript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.vbscript</span>,<span class="selector-class">.xml</span> <span class="selector-class">.css</span>,<span class="selector-class">.xml</span> <span class="selector-class">.hljs-cdata</span> &#123;<span class="attribute">opacity</span>: <span class="number">0.5</span>;&#125;<span class="selector-id">#container</span> &#123;<span class="attribute">padding</span>: <span class="number">15px</span>;<span class="attribute">margin-left</span>:<span class="number">20px</span>;&#125;pre &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">border-radius</span>: <span class="number">4px</span>;<span class="attribute">display</span>: block;&#125;pre <span class="selector-tag">code</span> &#123;<span class="attribute">white-space</span>: pre-wrap;&#125;<span class="selector-class">.hljs</span>,<span class="selector-tag">code</span> &#123;<span class="attribute">font-family</span>: Monaco, Menlo, Consolas, <span class="string">&#x27;Courier New&#x27;</span>, monospace;&#125;pre&#123;<span class="attribute">background-color</span>: <span class="number">#dddddd</span>;<span class="attribute">padding</span>:<span class="number">8px</span> <span class="number">0px</span> <span class="number">8px</span> <span class="number">30px</span>;<span class="attribute">word-wrap</span>: break-word;&#125;<span class="selector-tag">table</span> <span class="selector-tag">tbody</span> <span class="selector-tag">tr</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>n) &#123;<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">158</span>,<span class="number">188</span>,<span class="number">226</span>,<span class="number">0.12</span>); &#125;<span class="selector-pseudo">:not</span>(pre) &gt; <span class="selector-tag">code</span> &#123;<span class="attribute">padding</span>: <span class="number">2px</span> <span class="number">4px</span>;<span class="attribute">font-size</span>: <span class="number">90%</span>;<span class="attribute">color</span>: <span class="number">#c7254e</span>;<span class="attribute">background-color</span>: <span class="number">#f9f2f4</span>;<span class="attribute">white-space</span>: nowrap;<span class="attribute">border-radius</span>: <span class="number">4px</span>;&#125;<span class="selector-tag">th</span>, <span class="selector-tag">td</span> &#123;<span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;<span class="attribute">padding</span>: <span class="number">6px</span> <span class="number">12px</span>;&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">border-left-width</span>: <span class="number">10px</span>;<span class="attribute">background-color</span>: <span class="built_in">rgba</span>(<span class="number">102</span>,<span class="number">128</span>,<span class="number">153</span>,<span class="number">0.05</span>);<span class="attribute">border-top-right-radius</span>: <span class="number">5px</span>;<span class="attribute">border-bottom-right-radius</span>: <span class="number">5px</span>;<span class="attribute">padding</span>: <span class="number">1px</span> <span class="number">20px</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:before</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> small<span class="selector-pseudo">:after</span>,<span class="selector-tag">blockquote</span><span class="selector-class">.pull-right</span> <span class="selector-class">.small</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&#x27;\00A0 \2014&#x27;</span>&#125;<span class="selector-tag">blockquote</span><span class="selector-pseudo">:before</span>,<span class="selector-tag">blockquote</span><span class="selector-pseudo">:after</span> &#123;<span class="attribute">content</span>: <span class="string">&quot;&quot;</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">1.1em</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">p</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">1.1em</span>;<span class="attribute">font-size</span>: <span class="number">1em</span>;<span class="attribute">line-height</span>: <span class="number">1.45</span>&#125;<span class="selector-tag">blockquote</span> <span class="selector-tag">ul</span><span class="selector-pseudo">:last-child</span>,<span class="selector-tag">blockquote</span> <span class="selector-tag">ol</span><span class="selector-pseudo">:last-child</span> &#123;<span class="attribute">margin-bottom</span>: <span class="number">0</span>&#125;<span class="selector-tag">blockquote</span> &#123;<span class="attribute">margin</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">21px</span>;<span class="attribute">border-left</span>: <span class="number">10px</span> solid <span class="number">#dddddd</span>;&#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span> <span class="attr">marginwidth</span>=<span class="string">&quot;0&quot;</span> <span class="attr">marginheight</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">      replace_area</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>4、新建js脚本文件<code>convert.js</code>内容如下：<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> &#123; marked &#125; = <span class="built_in">require</span>(<span class="string">&#x27;marked&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取第3步创建的模板html文件</span></span><br><span class="line"><span class="keyword">var</span> headFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;head.html&#x27;</span>);</span><br><span class="line"><span class="comment">// 读取将要被转换的md文件</span></span><br><span class="line"><span class="keyword">var</span> mdFile = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;mark.md&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&#x27;----正在转换...&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用marked将md文件转换成html</span></span><br><span class="line"><span class="keyword">var</span> mdToHtmlStr = <span class="title function_">marked</span>(mdFile.<span class="title function_">toString</span>());</span><br><span class="line"><span class="comment">// 将md转换成html字符串替换到html模板文件中replace_area的位置</span></span><br><span class="line"><span class="keyword">var</span> content = headFile.<span class="title function_">toString</span>().<span class="title function_">replace</span>(<span class="string">&#x27;replace_area&#x27;</span>, mdToHtmlStr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(&quot;准备写入文件&quot;);</span></span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">writeFile</span>(<span class="string">&#x27;output.doc&#x27;</span>, content, <span class="keyword">function</span>(<span class="params">err</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;数据写入成功！&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// console.log(content);</span></span><br></pre></td></tr></table></figure></li>
+<li>5、运行脚本<code>node convert.js</code>即可</li>
+</ul>
 ]]></content>
       <categories>
         <category>其他</category>
@@ -700,6 +665,90 @@
         <tag>富文本编辑器</tag>
         <tag>wangEditor</tag>
         <tag>TinyMCE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一文彻底看懂package.json中的各种dependencies</title>
+    <url>/2022/08/31/%E4%B8%80%E6%96%87%E5%BD%BB%E5%BA%95%E7%9C%8B%E6%87%82package-json%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8Ddependencies/</url>
+    <content><![CDATA[<p>关于package.json中的各种dependencies的详细解释，可以直接参考<a href="https://developer.aliyun.com/article/1051418">这篇文章</a>。</p>
+<p>这里只做一个最终结论的摘录。</p>
+<table>
+<thead>
+<tr>
+<th>依赖类型</th>
+<th>定义在项目中</th>
+<th>定义在依赖中</th>
+<th>一句话总结</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dependencies</td>
+<td>会被安装</td>
+<td>会被安装</td>
+<td>定义包运行所需要的依赖包</td>
+<td>某前端项目使用 react 进行开发，需要将 react 添加到 dependencies 中</td>
+</tr>
+<tr>
+<td>devDependencies</td>
+<td>会被安装</td>
+<td>不会被安装</td>
+<td>定义包在开发时所需要的依赖包</td>
+<td>antd 使用了 @testing-library&#x2F;react 进行测试，需要将 @testing-library&#x2F;react 添加到 devDependencies 中</td>
+</tr>
+<tr>
+<td>peerDependencies</td>
+<td>不会被安装</td>
+<td>不会被安装，但是如果指向的依赖没有被安装或不符合时会有警告（peerDependenciesMeta 会影响该行为）</td>
+<td>定义该包运行所需要的依赖环境，一般和 devDependencies 一起使用</td>
+<td>antd 是一个 react 组件库，为了不和使用它的项目中的 react 版本定义造成冲突，需要将支持的 react 版本添加到 peerDependencies 中</td>
+</tr>
+<tr>
+<td>optionalDependencies</td>
+<td>会被安装，但是安装报错不会影响</td>
+<td>会被安装，但是安装报错不会影响</td>
+<td>optionalDependencies 用于定义对包运行不会造成影响的依赖包</td>
+<td>一个包在使用 A 包进行了某些操作，但是如果 A 包不在的话，可以使用别的 API 达到同样的效果，可以将 A 包添加到 optionalDependencies 中</td>
+</tr>
+</tbody></table>
+<hr>
+<p>另外记录下版本号的格式规定：<br><code>固定版本</code>：如4.0.3<br><code>～</code>：如～4.0.3，表示安装 4.0.x 的最新版本，也就是说安装时不会改变主版本号和次版本号<br><code>^</code>：如^17.0.2，表示安装 17.x.x 的最新版本，也就是说安装时不会改变主版本号<br><code>latest</code>：安装最新版本</p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>个人博客新评论邮件提醒功能</title>
+    <url>/2024/12/31/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%96%B0%E8%AF%84%E8%AE%BA%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E5%8A%9F%E8%83%BD/</url>
+    <content><![CDATA[<p>昨天无意间在打开科学上网的情况下访问了我的博客，发现有一条评论，都已经是11&#x2F;08的了，当初搭建博客的时候，虽然配置了使用 <a href="https://valine.js.org/">Valine</a> 评论系统，但是没有配置评论提醒功能，而且昨天刚发现，在没有开启科学上网的情况下，也加载不到评论，今天就来解决下这两个问题。</p>
+<h2 id="加载不到评论的问题"><a href="#加载不到评论的问题" class="headerlink" title="加载不到评论的问题"></a>加载不到评论的问题</h2><p>通过浏览器的 Network 可以看到，在没有科学上网的情况下，有一个 <code>av-min.js</code> 文件加载失败，怀疑是它导致的。</p>
+<p>通过排查，发现这个文件是由 <code>Valine.min.js</code> 文件加载的，而 <code>Valine.min.js</code> 在博客所使用的主题 <code>maupassant</code> 中是能够找到的：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// maupassant/layout/_partial/comments.pug</span></span><br><span class="line"><span class="title function_">script</span>(src=<span class="string">&#x27;//unpkg.com/valine@latest/dist/Valine.min.js&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>那我们只需要把这两个文件改成本地的就可以了。</p>
+<p>将两个文件保存到 <code>maupassant/source/js/</code> 目录下，然后修改 <code>comments.pug</code> 文件</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="title function_">script</span>(type=<span class="string">&#x27;text/javascript&#x27;</span>, src=<span class="title function_">url_for</span>(theme.<span class="property">js</span>) + <span class="string">&#x27;/Valine.min.js&#x27;</span> + <span class="string">&#x27;?v=&#x27;</span> + theme.<span class="property">version</span>)</span><br></pre></td></tr></table></figure>
+<p>同时修改 <code>Valine.min.js</code> 中对于 <code>av-min.js</code> 的引用地址 <code>/js/av-min.js</code> 即可。</p>
+<h2 id="邮件提醒"><a href="#邮件提醒" class="headerlink" title="邮件提醒"></a>邮件提醒</h2><p>Valine 自带的邮件提醒功能在 <code>v1.4.0</code> 中已经被移除了，具体可查看<a href="https://valine.js.org/notify.html">这里</a>，不过可以通过 <a href="https://github.com/zhaojun1998/Valine-Admin">Valine Admin</a> 来实现评论提醒功能。</p>
+<p>可以看到上面这个 Valine Admin 是 Fork 自 <a href="https://github.com/DesertsP/Valine-Admin">DesertsP 的 Valine Aadmin</a> 的，两个仓里都有配置步骤，但都有点问题，这里记录下。</p>
+<h3 id="1-代码库地址"><a href="#1-代码库地址" class="headerlink" title="1. 代码库地址"></a>1. 代码库地址</h3><p>Git 部署时，需要使用 <code>DesertsP</code> 的代码库，因为 <code>zhaojun1998</code> 的代码库在部署时会报错。<br><img width="500" alt="部署报错.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/部署报错.png"></p>
+<h3 id="2-环境变量"><a href="#2-环境变量" class="headerlink" title="2. 环境变量"></a>2. 环境变量</h3><p>在配置环境变量时，<code>DesertsP</code> 里面列的更全，我自己的是这样的：<br><img width="500" alt="环境变量.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/环境变量.png"><br>其中：</p>
+<ul>
+<li><code>SMTP_PASS</code>：网易邮箱的授权码，默认有效期是 180 天。</li>
+<li><code>ADMIN_URL</code>：是在 <code>环境变量</code> 下方 <code>绑定新域名</code> 处设置的，<code>DesertsP</code> 和 <code>zhaojun1998</code> 的截图，跟现在最新的 <code>LeanCloud</code> 的控制台页面已经对不上了。<img width="500" alt="访问域名.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/访问域名.png"></li>
+</ul>
+<h3 id="3-定时任务"><a href="#3-定时任务" class="headerlink" title="3. 定时任务"></a>3. 定时任务</h3><img width="500" alt="定时任务.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/定时任务.png">
+
+<blockquote>
+<p>2025-01-08 更新：<br>通过定制任务唤醒实例、检查漏发邮件已经不可用<br><img width="500" alt="定时任务执行失败.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/定时任务执行失败.png"></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Valine</tag>
+        <tag>LeanCloud</tag>
       </tags>
   </entry>
   <entry>
@@ -759,39 +808,6 @@
       <tags>
         <tag>Angular插件</tag>
         <tag>License</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>个人博客新评论邮件提醒功能</title>
-    <url>/2024/12/31/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%96%B0%E8%AF%84%E8%AE%BA%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E5%8A%9F%E8%83%BD/</url>
-    <content><![CDATA[<p>昨天无意间在打开科学上网的情况下访问了我的博客，发现有一条评论，都已经是11&#x2F;08的了，当初搭建博客的时候，虽然配置了使用 <a href="https://valine.js.org/">Valine</a> 评论系统，但是没有配置评论提醒功能，而且昨天刚发现，在没有开启科学上网的情况下，也加载不到评论，今天就来解决下这两个问题。</p>
-<h2 id="加载不到评论的问题"><a href="#加载不到评论的问题" class="headerlink" title="加载不到评论的问题"></a>加载不到评论的问题</h2><p>通过浏览器的 Network 可以看到，在没有科学上网的情况下，有一个 <code>av-min.js</code> 文件加载失败，怀疑是它导致的。</p>
-<p>通过排查，发现这个文件是由 <code>Valine.min.js</code> 文件加载的，而 <code>Valine.min.js</code> 在博客所使用的主题 <code>maupassant</code> 中是能够找到的：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// maupassant/layout/_partial/comments.pug</span></span><br><span class="line"><span class="title function_">script</span>(src=<span class="string">&#x27;//unpkg.com/valine@latest/dist/Valine.min.js&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>那我们只需要把这两个文件改成本地的就可以了。</p>
-<p>将两个文件保存到 <code>maupassant/source/js/</code> 目录下，然后修改 <code>comments.pug</code> 文件</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="title function_">script</span>(type=<span class="string">&#x27;text/javascript&#x27;</span>, src=<span class="title function_">url_for</span>(theme.<span class="property">js</span>) + <span class="string">&#x27;/Valine.min.js&#x27;</span> + <span class="string">&#x27;?v=&#x27;</span> + theme.<span class="property">version</span>)</span><br></pre></td></tr></table></figure>
-<p>同时修改 <code>Valine.min.js</code> 中对于 <code>av-min.js</code> 的引用地址 <code>/js/av-min.js</code> 即可。</p>
-<h2 id="邮件提醒"><a href="#邮件提醒" class="headerlink" title="邮件提醒"></a>邮件提醒</h2><p>Valine 自带的邮件提醒功能在 <code>v1.4.0</code> 中已经被移除了，具体可查看<a href="https://valine.js.org/notify.html">这里</a>，不过可以通过 <a href="https://github.com/zhaojun1998/Valine-Admin">Valine Admin</a> 来实现评论提醒功能。</p>
-<p>可以看到上面这个 Valine Admin 是 Fork 自 <a href="https://github.com/DesertsP/Valine-Admin">DesertsP 的 Valine Aadmin</a> 的，两个仓里都有配置步骤，但都有点问题，这里记录下。</p>
-<h3 id="1-代码库地址"><a href="#1-代码库地址" class="headerlink" title="1. 代码库地址"></a>1. 代码库地址</h3><p>Git 部署时，需要使用 <code>DesertsP</code> 的代码库，因为 <code>zhaojun1998</code> 的代码库在部署时会报错。<br><img width="500" alt="部署报错.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/部署报错.png"></p>
-<h3 id="2-环境变量"><a href="#2-环境变量" class="headerlink" title="2. 环境变量"></a>2. 环境变量</h3><p>在配置环境变量时，<code>DesertsP</code> 里面列的更全，我自己的是这样的：<br><img width="500" alt="环境变量.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/环境变量.png"><br>其中：</p>
-<ul>
-<li><code>SMTP_PASS</code>：网易邮箱的授权码，默认有效期是 180 天。</li>
-<li><code>ADMIN_URL</code>：是在 <code>环境变量</code> 下方 <code>绑定新域名</code> 处设置的，<code>DesertsP</code> 和 <code>zhaojun1998</code> 的截图，跟现在最新的 <code>LeanCloud</code> 的控制台页面已经对不上了。<img width="500" alt="访问域名.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/访问域名.png"></li>
-</ul>
-<h3 id="3-定时任务"><a href="#3-定时任务" class="headerlink" title="3. 定时任务"></a>3. 定时任务</h3><img width="500" alt="定时任务.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/定时任务.png">
-
-<blockquote>
-<p>2025-01-08 更新：<br>通过定制任务唤醒实例、检查漏发邮件已经不可用<br><img width="500" alt="定时任务执行失败.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/Valine邮件提醒/定时任务执行失败.png"></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>Valine</tag>
-        <tag>LeanCloud</tag>
       </tags>
   </entry>
   <entry>
@@ -869,6 +885,39 @@
       </tags>
   </entry>
   <entry>
+    <title>使用Nexus托管npm私有仓库</title>
+    <url>/2022/09/11/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</url>
+    <content><![CDATA[<h2 id="1-安装Nexus"><a href="#1-安装Nexus" class="headerlink" title="1.安装Nexus"></a>1.安装Nexus</h2><h3 id="1-1-前置条件"><a href="#1-1-前置条件" class="headerlink" title="1.1.前置条件"></a>1.1.前置条件</h3><p>nexus需要运行在jdk1.8及以上环境</p>
+<h3 id="1-2-下载"><a href="#1-2-下载" class="headerlink" title="1.2.下载"></a>1.2.下载</h3><p>链接：<a href="https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q">https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q</a>，提取码：hsnr</p>
+<h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3.安装"></a>1.3.安装</h3><p>直接解压即可，解压后会有两个目录：</p>
+<ul>
+<li>nexus-3.18.1-01：nexus私服管理界面的容器，内部集成了jetty</li>
+<li>sonatype-work：私服的默认仓库，用于存储索引和组件资源</li>
+</ul>
+<h3 id="1-4-启动"><a href="#1-4-启动" class="headerlink" title="1.4.启动"></a>1.4.启动</h3><p>进入nexus-3.18.1-01&#x2F;bin&#x2F;目录，<code>./nexus run</code></p>
+<h3 id="1-5-访问"><a href="#1-5-访问" class="headerlink" title="1.5.访问"></a>1.5.访问</h3><p>浏览器输入<a href="http://ip:8081/">http://ip:8081</a></p>
+<h3 id="1-6-登录"><a href="#1-6-登录" class="headerlink" title="1.6.登录"></a>1.6.登录</h3><p>默认用户名admin，会提示默认密码在安装包的什么位置<br><em>windows虚拟机上的密码改为了Talent123</em></p>
+<h3 id="1-7-Create-repository"><a href="#1-7-Create-repository" class="headerlink" title="1.7.Create repository"></a>1.7.Create repository</h3><p><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E5%88%9B%E5%BB%BA%E4%BB%93.jpg" alt="创建仓.jpg"><br>其中，npm（hosted）可设置包的发布策略，是否允许重新发布，如果不允许重新发布，则每次发布包，均需升级版本号<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E9%87%8D%E6%96%B0%E5%8F%91%E5%B8%83.jpg" alt="是否允许重新发布.jpg"></p>
+<h2 id="2-CentOS7下将Nexus设置为系统服务"><a href="#2-CentOS7下将Nexus设置为系统服务" class="headerlink" title="2.CentOS7下将Nexus设置为系统服务"></a>2.CentOS7下将Nexus设置为系统服务</h2><h3 id="2-1-修改nexus启动脚本"><a href="#2-1-修改nexus启动脚本" class="headerlink" title="2.1.修改nexus启动脚本"></a>2.1.修改nexus启动脚本</h3><p>修改脚本第14行：<code>INSTALL4J_JAVA_HOME_OVERRIDE=/root/jdk_1.8.0_231  // jdk安装路径</code><br>否则，可能会出现以下错误：<br><img width="460" alt="可能出现的错误.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/使用Nexus托管npm私有仓库/可能出现的错误.png"></p>
+<h3 id="2-2-配置系统服务"><a href="#2-2-配置系统服务" class="headerlink" title="2.2.配置系统服务"></a>2.2.配置系统服务</h3><p>设置软连接：<br><code>sudo ln -s /opt/nexus-3.18.1-01/bin/nexus /etc/init.d/nexus</code></p>
+<p>采用systemd的方式配置服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/systemd/system</span><br><span class="line">vi nexus.service</span><br><span class="line"></span><br><span class="line">在nexus.service文件中添加以下内容：</span><br><span class="line">[Unit]</span><br><span class="line">Description=nexus service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/nexus-3.18.1-01/bin/nexus start  #nexus的安装目录</span><br><span class="line">ExecStop=/opt/nexus-3.18.1-01/bin/nexus stop</span><br><span class="line">User=root  #系统用户名</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>分别执行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload #重新加载服务</span><br><span class="line">sudo systemctl enable nexus.service #开启开机自启动服务</span><br><span class="line">sudo systemctl start nexus.service #启动服务</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>由于自己是在虚拟机上安装的，本机访问没有问题，但其他主机访问不到服务，故还需做如下配置：<br><a href="https://www.cnblogs.com/mkl34367803/p/10095055.html">如何让局域网中的其他主机访问虚拟机</a></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>Nexus</tag>
+        <tag>npm私服</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>仿MacOS的后台管理系统</title>
     <url>/2023/01/13/%E4%BB%BFMacOS%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前比较流行的开源后台管理系统<a href="https://ng-alain.com/en">NG-ALAIN</a>、<a href="https://pro.ant.design/">Ant Design Pro</a>、<a href="https://panjiachen.github.io/vue-element-admin-site/zh/">Vue-Element-Admin</a>、<a href="http://boot.jeecg.com/">Jeecg Boot</a>等，其页面布局基本都是如下形式：<br><img width="500" alt="常见布局.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/仿MacOS的后台管理系统/常见布局.png"><br>诚然，这种形式并非不好，但看的多了，难免视觉疲劳。</p>
@@ -908,39 +957,6 @@
       <tags>
         <tag>WebOS</tag>
         <tag>后台管理系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用Nexus托管npm私有仓库</title>
-    <url>/2022/09/11/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</url>
-    <content><![CDATA[<h2 id="1-安装Nexus"><a href="#1-安装Nexus" class="headerlink" title="1.安装Nexus"></a>1.安装Nexus</h2><h3 id="1-1-前置条件"><a href="#1-1-前置条件" class="headerlink" title="1.1.前置条件"></a>1.1.前置条件</h3><p>nexus需要运行在jdk1.8及以上环境</p>
-<h3 id="1-2-下载"><a href="#1-2-下载" class="headerlink" title="1.2.下载"></a>1.2.下载</h3><p>链接：<a href="https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q">https://pan.baidu.com/s/1r5x6flbkiTgI0MiJVrvq4Q</a>，提取码：hsnr</p>
-<h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3.安装"></a>1.3.安装</h3><p>直接解压即可，解压后会有两个目录：</p>
-<ul>
-<li>nexus-3.18.1-01：nexus私服管理界面的容器，内部集成了jetty</li>
-<li>sonatype-work：私服的默认仓库，用于存储索引和组件资源</li>
-</ul>
-<h3 id="1-4-启动"><a href="#1-4-启动" class="headerlink" title="1.4.启动"></a>1.4.启动</h3><p>进入nexus-3.18.1-01&#x2F;bin&#x2F;目录，<code>./nexus run</code></p>
-<h3 id="1-5-访问"><a href="#1-5-访问" class="headerlink" title="1.5.访问"></a>1.5.访问</h3><p>浏览器输入<a href="http://ip:8081/">http://ip:8081</a></p>
-<h3 id="1-6-登录"><a href="#1-6-登录" class="headerlink" title="1.6.登录"></a>1.6.登录</h3><p>默认用户名admin，会提示默认密码在安装包的什么位置<br><em>windows虚拟机上的密码改为了Talent123</em></p>
-<h3 id="1-7-Create-repository"><a href="#1-7-Create-repository" class="headerlink" title="1.7.Create repository"></a>1.7.Create repository</h3><p><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E5%88%9B%E5%BB%BA%E4%BB%93.jpg" alt="创建仓.jpg"><br>其中，npm（hosted）可设置包的发布策略，是否允许重新发布，如果不允许重新发布，则每次发布包，均需升级版本号<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E4%BD%BF%E7%94%A8Nexus%E6%89%98%E7%AE%A1npm%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E9%87%8D%E6%96%B0%E5%8F%91%E5%B8%83.jpg" alt="是否允许重新发布.jpg"></p>
-<h2 id="2-CentOS7下将Nexus设置为系统服务"><a href="#2-CentOS7下将Nexus设置为系统服务" class="headerlink" title="2.CentOS7下将Nexus设置为系统服务"></a>2.CentOS7下将Nexus设置为系统服务</h2><h3 id="2-1-修改nexus启动脚本"><a href="#2-1-修改nexus启动脚本" class="headerlink" title="2.1.修改nexus启动脚本"></a>2.1.修改nexus启动脚本</h3><p>修改脚本第14行：<code>INSTALL4J_JAVA_HOME_OVERRIDE=/root/jdk_1.8.0_231  // jdk安装路径</code><br>否则，可能会出现以下错误：<br><img width="460" alt="可能出现的错误.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/使用Nexus托管npm私有仓库/可能出现的错误.png"></p>
-<h3 id="2-2-配置系统服务"><a href="#2-2-配置系统服务" class="headerlink" title="2.2.配置系统服务"></a>2.2.配置系统服务</h3><p>设置软连接：<br><code>sudo ln -s /opt/nexus-3.18.1-01/bin/nexus /etc/init.d/nexus</code></p>
-<p>采用systemd的方式配置服务</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/systemd/system</span><br><span class="line">vi nexus.service</span><br><span class="line"></span><br><span class="line">在nexus.service文件中添加以下内容：</span><br><span class="line">[Unit]</span><br><span class="line">Description=nexus service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/nexus-3.18.1-01/bin/nexus start  #nexus的安装目录</span><br><span class="line">ExecStop=/opt/nexus-3.18.1-01/bin/nexus stop</span><br><span class="line">User=root  #系统用户名</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
-<p>分别执行以下命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload #重新加载服务</span><br><span class="line">sudo systemctl enable nexus.service #开启开机自启动服务</span><br><span class="line">sudo systemctl start nexus.service #启动服务</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>由于自己是在虚拟机上安装的，本机访问没有问题，但其他主机访问不到服务，故还需做如下配置：<br><a href="https://www.cnblogs.com/mkl34367803/p/10095055.html">如何让局域网中的其他主机访问虚拟机</a></p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>Nexus</tag>
-        <tag>npm私服</tag>
       </tags>
   </entry>
   <entry>
@@ -985,26 +1001,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用nvm管理切换多个node版本</title>
-    <url>/2023/03/10/%E4%BD%BF%E7%94%A8nvm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnode%E7%89%88%E6%9C%AC/</url>
-    <content><![CDATA[<h2 id="1、Node版本管理工具"><a href="#1、Node版本管理工具" class="headerlink" title="1、Node版本管理工具"></a>1、Node版本管理工具</h2><p>node版本管理工具其实有很多，常见的的有nvm、n、fnm。之前一直使用n来管理node版本的，但是忽然有一天发现，安装n之前是需要先安装node的，而先安装的这一版本的node，不在n的管理范畴中，基于这两点原因，放弃了n的使用，转向了nvm。<br>本文主要记录下nvm的安装步骤和常用命令。</p>
-<h2 id="2、nvm的安装"><a href="#2、nvm的安装" class="headerlink" title="2、nvm的安装"></a>2、nvm的安装</h2><p>网上关于nvm安装的文章也挺多的，大多都是让你执行</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash</span><br></pre></td></tr></table></figure>
-<p>包括<a href="https://github.com/nvm-sh/nvm">Github</a>上也是这么写的，但一般由于网络原因，都是不能成功的，即便我开了科学上网，也没能成功。<br><strong>所以建议：</strong><br>直接从上述Github仓的<a href="https://github.com/nvm-sh/nvm/tags">Tags</a>里，下载最新版本的zip包，解压之后，运行包里的<code>install.sh</code>即可。<br>然后将如下代码粘贴到你的<code>～/.base_profile</code>文件中，保证nvm命令能够正常使用。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export NVM_DIR=&quot;$([ -z &quot;$&#123;XDG_CONFIG_HOME-&#125;&quot; ] &amp;&amp; printf %s &quot;$&#123;HOME&#125;/.nvm&quot; || printf %s &quot;$&#123;XDG_CONFIG_HOME&#125;/nvm&quot;)&quot;</span><br><span class="line">[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; \. &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm</span><br></pre></td></tr></table></figure>
-
-<h2 id="3、nvm常用命令"><a href="#3、nvm常用命令" class="headerlink" title="3、nvm常用命令"></a>3、nvm常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm ls                #列出已安装的node版本</span><br><span class="line">nvm ls-remote         #列出所有可用的node版本</span><br><span class="line">nvm use &lt;version&gt;     #使用指定版本的node</span><br><span class="line">nvm install &lt;version&gt; #安装指定版本的node</span><br><span class="line">nvm current           #显示当前正在使用的node版本</span><br><span class="line">nvm cache clear       #清空nvm缓存</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>nvm</tag>
-        <tag>Node版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用nrm管理切换多个npm registry地址</title>
     <url>/2023/03/15/%E4%BD%BF%E7%94%A8nrm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnpm-registry%E5%9C%B0%E5%9D%80/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家在工作时可能需要连接公司的私服下载前端依赖，这个时候会把npm的地址设置为公司的私服，但是这样的话自己开发自己的项目所需要的依赖在公司私服上找不到，因此又得重新设置npm下载的地址，因此在这推荐一个插件能够很方便的切换公司私服地址和淘宝镜像地址。</p>
@@ -1022,6 +1018,26 @@
       <tags>
         <tag>nrm</tag>
         <tag>npm源管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用nvm管理切换多个node版本</title>
+    <url>/2023/03/10/%E4%BD%BF%E7%94%A8nvm%E7%AE%A1%E7%90%86%E5%88%87%E6%8D%A2%E5%A4%9A%E4%B8%AAnode%E7%89%88%E6%9C%AC/</url>
+    <content><![CDATA[<h2 id="1、Node版本管理工具"><a href="#1、Node版本管理工具" class="headerlink" title="1、Node版本管理工具"></a>1、Node版本管理工具</h2><p>node版本管理工具其实有很多，常见的的有nvm、n、fnm。之前一直使用n来管理node版本的，但是忽然有一天发现，安装n之前是需要先安装node的，而先安装的这一版本的node，不在n的管理范畴中，基于这两点原因，放弃了n的使用，转向了nvm。<br>本文主要记录下nvm的安装步骤和常用命令。</p>
+<h2 id="2、nvm的安装"><a href="#2、nvm的安装" class="headerlink" title="2、nvm的安装"></a>2、nvm的安装</h2><p>网上关于nvm安装的文章也挺多的，大多都是让你执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash</span><br></pre></td></tr></table></figure>
+<p>包括<a href="https://github.com/nvm-sh/nvm">Github</a>上也是这么写的，但一般由于网络原因，都是不能成功的，即便我开了科学上网，也没能成功。<br><strong>所以建议：</strong><br>直接从上述Github仓的<a href="https://github.com/nvm-sh/nvm/tags">Tags</a>里，下载最新版本的zip包，解压之后，运行包里的<code>install.sh</code>即可。<br>然后将如下代码粘贴到你的<code>～/.base_profile</code>文件中，保证nvm命令能够正常使用。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export NVM_DIR=&quot;$([ -z &quot;$&#123;XDG_CONFIG_HOME-&#125;&quot; ] &amp;&amp; printf %s &quot;$&#123;HOME&#125;/.nvm&quot; || printf %s &quot;$&#123;XDG_CONFIG_HOME&#125;/nvm&quot;)&quot;</span><br><span class="line">[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; \. &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、nvm常用命令"><a href="#3、nvm常用命令" class="headerlink" title="3、nvm常用命令"></a>3、nvm常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm ls                #列出已安装的node版本</span><br><span class="line">nvm ls-remote         #列出所有可用的node版本</span><br><span class="line">nvm use &lt;version&gt;     #使用指定版本的node</span><br><span class="line">nvm install &lt;version&gt; #安装指定版本的node</span><br><span class="line">nvm current           #显示当前正在使用的node版本</span><br><span class="line">nvm cache clear       #清空nvm缓存</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>nvm</tag>
+        <tag>Node版本管理</tag>
       </tags>
   </entry>
   <entry>
@@ -1379,6 +1395,52 @@
       </tags>
   </entry>
   <entry>
+    <title>极空间Docker安装CentOS并开启SSH</title>
+    <url>/2024/10/12/%E6%9E%81%E7%A9%BA%E9%97%B4Docker%E5%AE%89%E8%A3%85CentOS%E5%B9%B6%E5%BC%80%E5%90%AFSSH/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>购买极空间的目的，一方面是为了方便存储、共享照片、视频、音乐，尤其是宝宝照片，换下来的旧手机、iPad，照片都没有统一的存储位置。iCloud？空间不够。百度网盘？空间方面，应该是之前参加活动，达到了1T，还可以，但下载速度实在是太恶心。而且毕竟是托管到了第三方平台，虽然百度是一家大型互联网公司，但以后谁说得准呢，想当年诺基亚也是响当当的手机厂商，不一样折戟沉沙。</p>
+<p>另一方面，利用极空间的Docker可以搭建一台专属服务器，平时搞个测试、部署个Web服务，实在是太方便了。之前尝试过在家里弄了台主机作为服务器，也购买过阿里云的服务器，但一方面不支持移动端、不方便共享，满足不了上面共享照片的需求，另一方面云服务器费用太高，最终都放弃了。</p>
+<p>虽然极空间依赖他的App，但内容是存储到自己硬盘里的，即便将来他也成为了诺基亚，理论上只要已安装的App还在，就能使用。再退一步，还可以将硬盘取出来直连接到电脑获取内容。</p>
+<h2 id="1-安装CentOS"><a href="#1-安装CentOS" class="headerlink" title="1. 安装CentOS"></a>1. 安装CentOS</h2><h3 id="1-1-下载镜像"><a href="#1-1-下载镜像" class="headerlink" title="1.1 下载镜像"></a>1.1 下载镜像</h3><p>直接在常用镜像里搜索CentOS下载即可。<br><img width="600" alt="下载镜像.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/下载镜像.png"></p>
+<h3 id="1-2-安装镜像"><a href="#1-2-安装镜像" class="headerlink" title="1.2 安装镜像"></a>1.2 安装镜像</h3><p>双击下载好的镜像，开始配置。<br>极空间的参数设置窗口分8个Tab。我们这里主要设置“基本设置”、“文件夹路径”、“端口”这三个Tab，其余页面保持默认就可以了。</p>
+<p><strong>基本设置</strong><br>由于我的极空间是8核16G的，所以这里我就不启用性能限制了。<br><img width="600" alt="基本设置.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/基本设置.png"></p>
+<p><strong>文件夹路径</strong><br>这里可以这么理解：将CentOS的<code>/data</code>目录映射到极空间的<code>/SATA0/centos</code>目录，这样在CentOS里就可以通过<code>/data</code>目录访问到极空间<code>/SATA0/centos</code>目录下的内容。<br><img width="600" alt="文件夹路径.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/文件夹路径.png"></p>
+<p><strong>端口</strong><br>其实就是做一个端口映射，将极空间的某个端口映射到CentOS的某个端口。这里需要一次性尽量设置多一些，因为后面再编辑的话，它会初始化CentOS，导致之前安装的软件都丢失，不过放到<code>/data</code>(映射到极空间目录)的内容不会丢失。<br><img width="600" alt="端口.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/端口.png"></p>
+<h2 id="2-安装Linux常备组件"><a href="#2-安装Linux常备组件" class="headerlink" title="2. 安装Linux常备组件"></a>2. 安装Linux常备组件</h2><p>首先从极空间Docker官方SSH进入系统，进行设置。进入之后是默认root账户。<br><img width="500" alt="SSH登录.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/SSH登录.png"></p>
+<p><strong>安装镜像源和系统下载工具</strong><br><span style="font-size: 13px; color: #999999">下面的命令需要整体复制粘贴，应该是极空间中Docker的命令行工具有bug</span></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i -e &quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot; /etc/yum.repos.d/CentOS-* </span><br><span class="line"></span><br><span class="line">yum install -y wget</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装网络工具</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y openssh*</span><br><span class="line"></span><br><span class="line">yum install -y net-tools</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装密码工具</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改密码</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-开启SSH"><a href="#3-开启SSH" class="headerlink" title="3. 开启SSH"></a>3. 开启SSH</h2><p><strong>修改ssh设置</strong><br>首先对系统的ssh设置进行修改（ssh工具就是上文中安装的openssh）。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<img width="400" alt="打开端口22的监听.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/打开端口22的监听.png">
+
+<p><strong>使能ssh</strong><br>在正常的使能方法里，直接使用Linux的systemctl工具就可以使能。但是，该工具是需要docker系统的privilege权限的，而且需要在开启docker的时候就赋予权限。而极空间既没有开放命令行操作，也没有开放privilege权限，所以我们也就无法使用命令行在docker开启的时候赋予privilege权限了。因此，我们必须使用其他的方法进行使能。<br>请按照下面方法进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /var/run/sshd</span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N &#x27;&#x27; </span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">/usr/sbin/sshd -D &amp; </span><br></pre></td></tr></table></figure>
+<p>然后就可以开启ssh工具了。<br>如果需要确认是否已经开启，可以输入下述指令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -antup | grep sshd</span><br></pre></td></tr></table></figure>
+<p>应该会有以下输出</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      256/sshd</span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      256/sshd</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-使用SSH工具连接"><a href="#4-使用SSH工具连接" class="headerlink" title="4. 使用SSH工具连接"></a>4. 使用SSH工具连接</h2><p>现在就可以使用比如<code>Termius</code>等ssh工具进行连接了。</p>
+<h2 id="5-配置ll命令"><a href="#5-配置ll命令" class="headerlink" title="5. 配置ll命令"></a>5. 配置<code>ll</code>命令</h2><p>在CentOS中，<code>ll</code>命令是<code>ls -l</code>的别名，但是默认情况下，CentOS并没有配置<code>ll</code>命令。因此，我们需要手动配置一下。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>在文件末尾添加以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">alias ll=&#x27;ls -alF&#x27;</span><br></pre></td></tr></table></figure>
+<p>然后保存并退出，使用以下命令使配置生效：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>极空间</category>
+      </categories>
+  </entry>
+  <entry>
     <title>电子表格组件调研</title>
     <url>/2024/11/27/%E7%94%B5%E5%AD%90%E8%A1%A8%E6%A0%BC%E7%BB%84%E4%BB%B6%E8%B0%83%E7%A0%94/</url>
     <content><![CDATA[<table>
@@ -1434,79 +1496,6 @@
       </tags>
   </entry>
   <entry>
-    <title>极空间Docker安装CentOS并开启SSH</title>
-    <url>/2024/10/12/%E6%9E%81%E7%A9%BA%E9%97%B4Docker%E5%AE%89%E8%A3%85CentOS%E5%B9%B6%E5%BC%80%E5%90%AFSSH/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>购买极空间的目的，一方面是为了方便存储、共享照片、视频、音乐，尤其是宝宝照片，换下来的旧手机、iPad，照片都没有统一的存储位置。iCloud？空间不够。百度网盘？空间方面，应该是之前参加活动，达到了1T，还可以，但下载速度实在是太恶心。而且毕竟是托管到了第三方平台，虽然百度是一家大型互联网公司，但以后谁说得准呢，想当年诺基亚也是响当当的手机厂商，不一样折戟沉沙。</p>
-<p>另一方面，利用极空间的Docker可以搭建一台专属服务器，平时搞个测试、部署个Web服务，实在是太方便了。之前尝试过在家里弄了台主机作为服务器，也购买过阿里云的服务器，但一方面不支持移动端、不方便共享，满足不了上面共享照片的需求，另一方面云服务器费用太高，最终都放弃了。</p>
-<p>虽然极空间依赖他的App，但内容是存储到自己硬盘里的，即便将来他也成为了诺基亚，理论上只要已安装的App还在，就能使用。再退一步，还可以将硬盘取出来直连接到电脑获取内容。</p>
-<h2 id="1-安装CentOS"><a href="#1-安装CentOS" class="headerlink" title="1. 安装CentOS"></a>1. 安装CentOS</h2><h3 id="1-1-下载镜像"><a href="#1-1-下载镜像" class="headerlink" title="1.1 下载镜像"></a>1.1 下载镜像</h3><p>直接在常用镜像里搜索CentOS下载即可。<br><img width="600" alt="下载镜像.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/下载镜像.png"></p>
-<h3 id="1-2-安装镜像"><a href="#1-2-安装镜像" class="headerlink" title="1.2 安装镜像"></a>1.2 安装镜像</h3><p>双击下载好的镜像，开始配置。<br>极空间的参数设置窗口分8个Tab。我们这里主要设置“基本设置”、“文件夹路径”、“端口”这三个Tab，其余页面保持默认就可以了。</p>
-<p><strong>基本设置</strong><br>由于我的极空间是8核16G的，所以这里我就不启用性能限制了。<br><img width="600" alt="基本设置.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/基本设置.png"></p>
-<p><strong>文件夹路径</strong><br>这里可以这么理解：将CentOS的<code>/data</code>目录映射到极空间的<code>/SATA0/centos</code>目录，这样在CentOS里就可以通过<code>/data</code>目录访问到极空间<code>/SATA0/centos</code>目录下的内容。<br><img width="600" alt="文件夹路径.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/文件夹路径.png"></p>
-<p><strong>端口</strong><br>其实就是做一个端口映射，将极空间的某个端口映射到CentOS的某个端口。这里需要一次性尽量设置多一些，因为后面再编辑的话，它会初始化CentOS，导致之前安装的软件都丢失，不过放到<code>/data</code>(映射到极空间目录)的内容不会丢失。<br><img width="600" alt="端口.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/端口.png"></p>
-<h2 id="2-安装Linux常备组件"><a href="#2-安装Linux常备组件" class="headerlink" title="2. 安装Linux常备组件"></a>2. 安装Linux常备组件</h2><p>首先从极空间Docker官方SSH进入系统，进行设置。进入之后是默认root账户。<br><img width="500" alt="SSH登录.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/SSH登录.png"></p>
-<p><strong>安装镜像源和系统下载工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i -e &quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot; /etc/yum.repos.d/CentOS-* </span><br><span class="line"></span><br><span class="line">yum install -y wget</span><br></pre></td></tr></table></figure>
-
-<p><strong>安装网络工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y openssh*</span><br><span class="line"></span><br><span class="line">yum install -y net-tools</span><br></pre></td></tr></table></figure>
-
-<p><strong>安装密码工具</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y passwd</span><br></pre></td></tr></table></figure>
-
-<p><strong>修改密码</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-开启SSH"><a href="#3-开启SSH" class="headerlink" title="3. 开启SSH"></a>3. 开启SSH</h2><p><strong>修改ssh设置</strong><br>首先对系统的ssh设置进行修改（ssh工具就是上文中安装的openssh）。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
-<img width="400" alt="打开端口22的监听.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/极空间Docker安装CentOS并开启SSH/打开端口22的监听.png">
-
-<p><strong>使能ssh</strong><br>在正常的使能方法里，直接使用Linux的systemctl工具就可以使能。但是，该工具是需要docker系统的privilege权限的，而且需要在开启docker的时候就赋予权限。而极空间既没有开放命令行操作，也没有开放privilege权限，所以我们也就无法使用命令行在docker开启的时候赋予privilege权限了。因此，我们必须使用其他的方法进行使能。<br>请按照下面方法进行配置：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /var/run/sshd</span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N &#x27;&#x27; </span><br><span class="line"></span><br><span class="line">ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N &#x27;&#x27;</span><br><span class="line"></span><br><span class="line">/usr/sbin/sshd -D &amp; </span><br></pre></td></tr></table></figure>
-<p>然后就可以开启ssh工具了。<br>如果需要确认是否已经开启，可以输入下述指令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -antup | grep sshd</span><br></pre></td></tr></table></figure>
-<p>应该会有以下输出</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      256/sshd</span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      256/sshd</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-使用SSH工具连接"><a href="#4-使用SSH工具连接" class="headerlink" title="4. 使用SSH工具连接"></a>4. 使用SSH工具连接</h2><p>现在就可以使用比如<code>Termius</code>等ssh工具进行连接了。</p>
-<h2 id="5-配置ll命令"><a href="#5-配置ll命令" class="headerlink" title="5. 配置ll命令"></a>5. 配置<code>ll</code>命令</h2><p>在CentOS中，<code>ll</code>命令是<code>ls -l</code>的别名，但是默认情况下，CentOS并没有配置<code>ll</code>命令。因此，我们需要手动配置一下。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vi ~/.bashrc</span><br></pre></td></tr></table></figure>
-<p>在文件末尾添加以下内容：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">alias ll=&#x27;ls -alF&#x27;</span><br></pre></td></tr></table></figure>
-<p>然后保存并退出，使用以下命令使配置生效：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>极空间</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>聚类分析使用场景</title>
-    <url>/2023/07/12/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
-    <content><![CDATA[<h3 id="一、数据集"><a href="#一、数据集" class="headerlink" title="一、数据集"></a>一、数据集</h3><ol>
-<li>公司积累了一批员工应用的使用数据，要根据不同维度划分不同的员工群体。如经常访问招聘网站和网络邮件的员工可能会有离职倾向，这类群体需要重点关注。</li>
-<li>该数据集中含有员工访问CRM、云盘、招聘等特征信息。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/b6d269bf_358662.jpg" alt="图1"></li>
-</ol>
-<h3 id="二、数据预处理"><a href="#二、数据预处理" class="headerlink" title="二、数据预处理"></a>二、数据预处理</h3><ol>
-<li>想通过CRM、云盘、招聘、网络邮件划分群体，选择这几个字段。</li>
-<li>由于不同字段数值差别大，进行标准化处理。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/2b50d461_358662.jpg" alt="图2"></li>
-<li>处理后的数据如下<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/785de7b5_358662.jpg" alt="图3"></li>
-</ol>
-<h3 id="三、聚类"><a href="#三、聚类" class="headerlink" title="三、聚类"></a>三、聚类</h3><ol>
-<li>选择聚类算法<br>这里默认选择k-means算法</li>
-<li>选择聚类字段<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/163cfd8a_358662.jpg" alt="图4"></li>
-<li>选择要分成几类<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/918b58bc_358662.jpg" alt="图5"></li>
-</ol>
-<h3 id="四、可视化展示"><a href="#四、可视化展示" class="headerlink" title="四、可视化展示"></a>四、可视化展示</h3><ol>
-<li>选择纬度<br>选择2维</li>
-<li>选择邮件为X轴，招聘网站为Y轴。<br>可以看到访问招聘网站较多的同时访问邮件也较多的人比较集中。也说明这使用这几个参数进行分类效果较好。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/d7cd2271_358662.jpg" alt="图6"></li>
-<li>选择CRM为X轴，云盘为Y轴。<br>可以看到比较分散，说明这两个分类效果较差。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/b273a638_358662.jpg" alt="图7"></li>
-</ol>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-  </entry>
-  <entry>
     <title>第一个基于Electron的小工具Stock</title>
     <url>/2024/12/27/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8EElectron%E7%9A%84%E5%B0%8F%E5%B7%A5%E5%85%B7Stock/</url>
     <content><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>对于上班族来说，怎么能够更隐蔽的盯盘而不被领导发现呢？那自然是所占屏幕的空间越小越好了。像我这种门外汉，其实不需要太多的功能，只需要能够实时查看股票的最新价格、涨跌情况即可，最好是能够随时一眼就能看到的。</p>
@@ -1554,6 +1543,58 @@
       </tags>
   </entry>
   <entry>
+    <title>阿里云-智能语音交互</title>
+    <url>/2025/01/06/%E9%98%BF%E9%87%8C%E4%BA%91-%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92/</url>
+    <content><![CDATA[<p>随着智能家居、移动设备及车载信息系统等领域中智能语音助手应用的日益普及，我们不妨思考：Web端管理平台能否也实现类似功能呢？可以肯定的是，这在技术上是完全可以实现的；至于是否好用、能否得到客户认可，那就是另外一个问题了。而提到语音助手，语音识别则是其中的关键技术之一。本文主要介绍如何使用阿里云的智能语音交互服务，实现实时语音识别功能。</p>
+<h2 id="开通服务"><a href="#开通服务" class="headerlink" title="开通服务"></a>开通服务</h2><p>要使用阿里云的智能语音交互服务，首先需要开通服务。</p>
+<p>进入 <a href="https://ai.aliyun.com/nls">智能语音交互产品首页</a>，单击“开通并购买”即可开通智能语音交互服务。阿里云提供3个月的免费试用，对于测试来说已经足够了。</p>
+<h2 id="RAM用户"><a href="#RAM用户" class="headerlink" title="RAM用户"></a>RAM用户</h2><p>在接入阿里云之前，我们先来了解一下RAM用户。<a href="https://help.aliyun.com/document_detail/324629.html">这是官方文档中的定义和使用流程</a>，我们可以简单理解为他是阿里云账号或其他RAM用户的子账号，并且阿里云强烈建议开发者使用RAM用户来登录控制台、调用API。</p>
+<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><p>在 <a href="https://ram.console.aliyun.com/users">RAM访问控制&#x2F;用户</a> 控制台这里创建好用户，并在用户详情页面，创建该用户的 AccessKey。创建好之后，保存好 AccessKey ID 和 AccessKey Secret，后面会用到。</p>
+<p>关于 AccessKey ID 和 AccessKey Secret 的说明，<a href="https://help.aliyun.com/zh/ram/user-guide/create-an-accesskey-pair-1">官方文档</a> 中有详细的说明，这里不再赘述。</p>
+<h3 id="分配权限"><a href="#分配权限" class="headerlink" title="分配权限"></a>分配权限</h3><p>另外记得给该用户分配相应的权限，这里只需要授予<code>AliyunNLSFullAccess</code>的权限即可。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E9%98%BF%E9%87%8C%E4%BA%91-%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92/%E6%8E%88%E6%9D%83.png" alt="授权.png"></p>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>接下来我们就可以进入 <a href="https://nls-portal.console.aliyun.com/overview">智能语音交互</a> 控制台创建一个测试项目了，有些平台叫做“应用”，这里叫做“项目”，其实都是一个意思。主要是用来区分一个具体的项目、产品或服务。平台可以通过应用来监控和限制API请求的数量，以防止滥用；另外还能够基于单个应用收集数据，帮助开发者了解它们的使用情况和性能表现。</p>
+<p>这一步我们会得到一个 Appkey，主要用来区分不同的应用，正如上面所说，如果不加以区分，平台是无法知道是哪个应用在调用API的，也就无法进行数据的统计分析。</p>
+<h2 id="获取Token"><a href="#获取Token" class="headerlink" title="获取Token"></a>获取Token</h2><p>其实在上面有了 AccessKey ID 和 AccessKey Secret 之后就可以获取 Token 了，甚至都不需要 AccessKey ID 和 AccessKey Secret 也能获取 Token，因为阿里云贴心的提供了获取临时 AccessToken 的方式：<br><img width="600" alt="临时AccessToken.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/阿里云-智能语音交互/临时AccessToken.png"></p>
+<p>如果想通过代码获取 Token 的话，阿里云提供了3种获取 Token 的方式，<a href="https://help.aliyun.com/zh/isi/getting-started/obtain-an-access-token-1/">详见官方文档</a>。</p>
+<h2 id="开发代码"><a href="#开发代码" class="headerlink" title="开发代码"></a>开发代码</h2><p>了解这几个步骤、流程之后，就可以着手开发代码了。这里已经有一位兄弟实现了<a href="https://zhuanlan.zhihu.com/p/651711848">vue + websocket接入阿里云实时语音识别</a>，代码完全可用，我就不重复造轮子了。</p>
+<p><a href="https://help.aliyun.com/zh/isi/developer-reference/websocket">这里</a>是 WebSocket 接入的官方文档。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p><a href="https://github.com/DoAutumn/aliyun-audio">https://github.com/DoAutumn/aliyun-audio</a></p>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>实时语音识别</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>聚类分析使用场景</title>
+    <url>/2023/07/12/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
+    <content><![CDATA[<h3 id="一、数据集"><a href="#一、数据集" class="headerlink" title="一、数据集"></a>一、数据集</h3><ol>
+<li>公司积累了一批员工应用的使用数据，要根据不同维度划分不同的员工群体。如经常访问招聘网站和网络邮件的员工可能会有离职倾向，这类群体需要重点关注。</li>
+<li>该数据集中含有员工访问CRM、云盘、招聘等特征信息。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/b6d269bf_358662.jpg" alt="图1"></li>
+</ol>
+<h3 id="二、数据预处理"><a href="#二、数据预处理" class="headerlink" title="二、数据预处理"></a>二、数据预处理</h3><ol>
+<li>想通过CRM、云盘、招聘、网络邮件划分群体，选择这几个字段。</li>
+<li>由于不同字段数值差别大，进行标准化处理。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/2b50d461_358662.jpg" alt="图2"></li>
+<li>处理后的数据如下<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/785de7b5_358662.jpg" alt="图3"></li>
+</ol>
+<h3 id="三、聚类"><a href="#三、聚类" class="headerlink" title="三、聚类"></a>三、聚类</h3><ol>
+<li>选择聚类算法<br>这里默认选择k-means算法</li>
+<li>选择聚类字段<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/163cfd8a_358662.jpg" alt="图4"></li>
+<li>选择要分成几类<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/918b58bc_358662.jpg" alt="图5"></li>
+</ol>
+<h3 id="四、可视化展示"><a href="#四、可视化展示" class="headerlink" title="四、可视化展示"></a>四、可视化展示</h3><ol>
+<li>选择纬度<br>选择2维</li>
+<li>选择邮件为X轴，招聘网站为Y轴。<br>可以看到访问招聘网站较多的同时访问邮件也较多的人比较集中。也说明这使用这几个参数进行分类效果较好。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/d7cd2271_358662.jpg" alt="图6"></li>
+<li>选择CRM为X轴，云盘为Y轴。<br>可以看到比较分散，说明这两个分类效果较差。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/b273a638_358662.jpg" alt="图7"></li>
+</ol>
+]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+  </entry>
+  <entry>
     <title>通过Gitee的OpenAPI实现图床</title>
     <url>/2024/09/27/%E9%80%9A%E8%BF%87Gitee%E7%9A%84OpenAPI%E5%AE%9E%E7%8E%B0%E5%9B%BE%E5%BA%8A/</url>
     <content><![CDATA[<p>写博客、记笔记时，总会遇到图片上传的问题，如果使用本地图片，那么图片的存储和管理就会变得非常麻烦，所以需要一个图床来存储图片，方便管理和使用。</p>
@@ -1579,31 +1620,6 @@
       </categories>
       <tags>
         <tag>图床</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里云-智能语音交互</title>
-    <url>/2025/01/06/%E9%98%BF%E9%87%8C%E4%BA%91-%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92/</url>
-    <content><![CDATA[<p>随着智能家居、移动设备及车载信息系统等领域中智能语音助手应用的日益普及，我们不妨思考：Web端管理平台能否也实现类似功能呢？可以肯定的是，这在技术上是完全可以实现的；至于是否好用、能否得到客户认可，那就是另外一个问题了。而提到语音助手，语音识别则是其中的关键技术之一。本文主要介绍如何使用阿里云的智能语音交互服务，实现实时语音识别功能。</p>
-<h2 id="开通服务"><a href="#开通服务" class="headerlink" title="开通服务"></a>开通服务</h2><p>要使用阿里云的智能语音交互服务，首先需要开通服务。</p>
-<p>进入 <a href="https://ai.aliyun.com/nls">智能语音交互产品首页</a>，单击“开通并购买”即可开通智能语音交互服务。阿里云提供3个月的免费试用，对于测试来说已经足够了。</p>
-<h2 id="RAM用户"><a href="#RAM用户" class="headerlink" title="RAM用户"></a>RAM用户</h2><p>在接入阿里云之前，我们先来了解一下RAM用户。<a href="https://help.aliyun.com/document_detail/324629.html">这是官方文档中的定义和使用流程</a>，我们可以简单理解为他是阿里云账号或其他RAM用户的子账号，并且阿里云强烈建议开发者使用RAM用户来登录控制台、调用API。</p>
-<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><p>在 <a href="https://ram.console.aliyun.com/users">RAM访问控制&#x2F;用户</a> 控制台这里创建好用户，并在用户详情页面，创建该用户的 AccessKey。创建好之后，保存好 AccessKey ID 和 AccessKey Secret，后面会用到。</p>
-<p>关于 AccessKey ID 和 AccessKey Secret 的说明，<a href="https://help.aliyun.com/zh/ram/user-guide/create-an-accesskey-pair-1">官方文档</a> 中有详细的说明，这里不再赘述。</p>
-<h3 id="分配权限"><a href="#分配权限" class="headerlink" title="分配权限"></a>分配权限</h3><p>另外记得给该用户分配相应的权限，这里只需要授予<code>AliyunNLSFullAccess</code>的权限即可。<br><img src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/%E9%98%BF%E9%87%8C%E4%BA%91-%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92/%E6%8E%88%E6%9D%83.png" alt="授权.png"></p>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>接下来我们就可以进入 <a href="https://nls-portal.console.aliyun.com/overview">智能语音交互</a> 控制台创建一个测试项目了，有些平台叫做“应用”，这里叫做“项目”，其实都是一个意思。主要是用来区分一个具体的项目、产品或服务。平台可以通过应用来监控和限制API请求的数量，以防止滥用；另外还能够基于单个应用收集数据，帮助开发者了解它们的使用情况和性能表现。</p>
-<p>这一步我们会得到一个 Appkey，主要用来区分不同的应用，正如上面所说，如果不加以区分，平台是无法知道是哪个应用在调用API的，也就无法进行数据的统计分析。</p>
-<h2 id="获取Token"><a href="#获取Token" class="headerlink" title="获取Token"></a>获取Token</h2><p>其实在上面有了 AccessKey ID 和 AccessKey Secret 之后就可以获取 Token 了，甚至都不需要 AccessKey ID 和 AccessKey Secret 也能获取 Token，因为阿里云贴心的提供了获取临时 AccessToken 的方式：<br><img width="600" alt="临时AccessToken.png" src="https://gitee.com/doautumn/doautumn.gitee.io/raw/master/阿里云-智能语音交互/临时AccessToken.png"></p>
-<p>如果想通过代码获取 Token 的话，阿里云提供了3种获取 Token 的方式，<a href="https://help.aliyun.com/zh/isi/getting-started/obtain-an-access-token-1/">详见官方文档</a>。</p>
-<h2 id="开发代码"><a href="#开发代码" class="headerlink" title="开发代码"></a>开发代码</h2><p>了解这几个步骤、流程之后，就可以着手开发代码了。这里已经有一位兄弟实现了<a href="https://zhuanlan.zhihu.com/p/651711848">vue + websocket接入阿里云实时语音识别</a>，代码完全可用，我就不重复造轮子了。</p>
-<p><a href="https://help.aliyun.com/zh/isi/developer-reference/websocket">这里</a>是 WebSocket 接入的官方文档。</p>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p><a href="https://github.com/DoAutumn/aliyun-audio">https://github.com/DoAutumn/aliyun-audio</a></p>
-]]></content>
-      <categories>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>实时语音识别</tag>
       </tags>
   </entry>
 </search>
